@@ -1,4 +1,6 @@
 
+require 'spec_helper'
+
 module Locomotive
   describe Plugin do
 

@@ -1,3 +1,2 @@
 
-module LocomotivePlugins
-end
+require 'locomotive/plugin'

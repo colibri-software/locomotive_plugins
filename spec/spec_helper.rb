@@ -1,4 +1,3 @@
-ENV['RAILS_ENV'] ||= 'test'
 
 require 'rubygems'
 require 'bundler'
@@ -16,6 +15,9 @@ Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each {|f| require f}
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
+
+
+require 'locomotive_plugins'
 
 
 #FactoryGirl.find_definitions
