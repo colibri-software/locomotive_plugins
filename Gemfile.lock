@@ -2,9 +2,6 @@ PATH
   remote: .
   specs:
     locomotive_plugins (0.0.1)
-      factory_girl
-      mocha
-      rspec (~> 2.3)
 
 GEM
   remote: http://rubygems.org/
@@ -33,4 +30,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  factory_girl
   locomotive_plugins!
+  mocha
+  rspec (~> 2.3)

@@ -6,7 +6,7 @@ require 'version'
 
 Gem::Specification.new do |s|
   s.name = "locomotive_plugins"
-  s.version = MobileDetectionPlugin::VERSION
+  s.version = LocomotivePlugins::VERSION
   s.platform    = Gem::Platform::RUBY
 
   s.authors = ["Colibri Software"]
@@ -22,16 +22,10 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = ">= 1.3.6"
 
-
-  s.add_dependency 'rspec', '~> 2.3'
-  s.add_dependency 'factory_girl'
-  s.add_dependency 'mocha'
-
   s.files        = Dir["Rakefile",
     'Gemfile',
     '{lib}/**/*',
     '{vendor}/**/*']
-
 
   if s.respond_to? :specification_version
     s.specification_version = 3
