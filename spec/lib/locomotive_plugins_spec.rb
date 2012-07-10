@@ -8,23 +8,25 @@ describe LocomotivePlugins do
   end
 
   it 'should register plugins under a given name' do
-    LocomotivePlugins.register_plugin(MyPlugin, 'my_amazing_plugin')
+    LocomotivePlugins.register_plugin(Locomotive::MyPlugin, 'my_amazing_plugin')
     registered = LocomotivePlugins.registered_plugins
     registered.count.should == 1
-    registered['my_amazing_plugin'].class.should == MyPlugin
+    registered['my_amazing_plugin'].class.should == Locomotive::MyPlugin
   end
 
   it 'should register plugins under a default name' do
-    LocomotivePlugins.register_plugin(MyPlugin)
+    LocomotivePlugins.register_plugin(Locomotive::MyPlugin)
     registered = LocomotivePlugins.registered_plugins
     registered.count.should == 1
-    registered['my_plugin'].class.should == MyPlugin
+    registered['my_plugin'].class.should == Locomotive::MyPlugin
   end
 
   protected
 
-  class MyPlugin
-    include Locomotive::Plugin
+  module Locomotive
+    class MyPlugin
+      include Locomotive::Plugin
+    end
   end
 
 end
