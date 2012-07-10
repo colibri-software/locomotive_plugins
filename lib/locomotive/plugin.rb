@@ -8,12 +8,12 @@ module Locomotive
 
     module ClassMethods
       def before_filter(meth)
-        @@before_filters ||= []
-        @@before_filters << meth
+        @before_filters ||= []
+        @before_filters << meth
       end
 
       def before_filters
-        @@before_filters
+        @before_filters
       end
     end
 

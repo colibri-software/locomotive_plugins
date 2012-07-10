@@ -33,5 +33,14 @@ module Locomotive
       end
     end
 
+    class MyOtherPlugin
+      include Locomotive::Plugin
+
+      before_filter :another_method
+
+      def another_method
+      end
+    end
+
   end
 end
