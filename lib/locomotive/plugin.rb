@@ -15,10 +15,26 @@ module Locomotive
       def before_filters
         @before_filters
       end
+
+      def drop(drop)
+        @drops ||= []
+        @drops << drop
+      end
+
+      def drops
+        if !@drops && self.respond_to?(:build_drops)
+          build_drops
+        end
+        @drops ||= []
+      end
     end
 
     def before_filters
       self.class.before_filters
+    end
+
+    def drops
+      self.class.drops
     end
 
   end

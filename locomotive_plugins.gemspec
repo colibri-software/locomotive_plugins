@@ -22,6 +22,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = ">= 1.3.6"
 
+  s.add_dependency 'locomotive_liquid', '~> 2.2.2'
+
   s.files        = Dir["Rakefile",
     'Gemfile',
     '{lib}/**/*',

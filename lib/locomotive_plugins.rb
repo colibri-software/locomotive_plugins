@@ -1,4 +1,8 @@
 
+require 'rubygems'
+require 'bundler/setup'
+require 'liquid'
+
 require 'locomotive/plugin'
 
 module LocomotivePlugins
