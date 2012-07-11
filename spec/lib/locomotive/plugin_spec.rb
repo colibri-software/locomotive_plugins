@@ -28,7 +28,7 @@ module Locomotive
         'This is my first before filter!'
       end
 
-      def my_method1
+      def my_method2
         'This is my second before filter!'
       end
     end
