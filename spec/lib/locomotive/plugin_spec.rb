@@ -6,6 +6,7 @@ module Locomotive
 
     before(:each) do
       @plugin = MyPlugin.new
+      @another_plugin = MyOtherPlugin.new
     end
 
     it 'should store a list of before_filters' do
@@ -14,11 +15,9 @@ module Locomotive
       @plugin.before_filters[1].should == :my_method2
     end
 
-    it 'should store a list of liquid drops' do
-      @plugin.drops.count.should == 2
-      @plugin.drops[0].class.should == @drop1
-      @plugin.drops[1].class.should == @drop2
-      @plugin.drops[0].should_not == @plugin.drops[1]
+    it 'should optionally return a liquid drop' do
+      @plugin.to_liquid.class.should == MyDrop
+      @another_plugin.to_liquid.should be_nil
     end
 
     protected
@@ -37,9 +36,8 @@ module Locomotive
       before_filter :my_method1
       before_filter :my_method2
 
-      def self.build_drops
-        drop first_drop
-        drop second_drop
+      def to_liquid
+        MyDrop.new
       end
 
       def my_method1
