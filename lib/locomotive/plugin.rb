@@ -17,6 +17,8 @@ module Locomotive
       end
     end
 
+    attr_accessor :controller
+
     def before_filters
       self.class.before_filters
     end
