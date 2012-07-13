@@ -13,7 +13,7 @@ module Locomotive
       end
 
       def before_filters
-        @before_filters
+        @before_filters ||= []
       end
     end
 

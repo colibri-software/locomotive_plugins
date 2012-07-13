@@ -7,12 +7,17 @@ module Locomotive
     before(:each) do
       @plugin = MyPlugin.new
       @another_plugin = MyOtherPlugin.new
+      @useless_plugin = UselessPlugin.new
     end
 
     it 'should store a list of before_filters' do
       @plugin.before_filters.count.should == 2
       @plugin.before_filters[0].should == :my_method1
       @plugin.before_filters[1].should == :my_method2
+    end
+
+    it 'should have an empty array of before_filters by default' do
+      @useless_plugin.before_filters.should == []
     end
 
     it 'should optionally return a liquid drop' do
@@ -56,6 +61,10 @@ module Locomotive
 
       def another_method
       end
+    end
+
+    class UselessPlugin
+      include Locomotive::Plugin
     end
 
     class MyDrop < ::Liquid::Drop
