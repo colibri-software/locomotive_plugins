@@ -25,6 +25,11 @@ module Locomotive
       @another_plugin.to_liquid.should be_nil
     end
 
+    it 'should optionally return a content entry scope' do
+      @plugin.content_entry_scope.should == { :my_field => :my_value }
+      @another_plugin.content_entry_scope.should be_nil
+    end
+
     protected
 
     def first_drop
@@ -43,6 +48,10 @@ module Locomotive
 
       def to_liquid
         MyDrop.new
+      end
+
+      def content_entry_scope
+        { :my_field => :my_value }
       end
 
       def my_method1

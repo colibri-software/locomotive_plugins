@@ -27,5 +27,9 @@ module Locomotive
       nil
     end
 
+    def content_entry_scope
+      nil
+    end
+
   end
 end
