@@ -27,7 +27,7 @@ module Locomotive
       nil
     end
 
-    def content_type_scope(content_type = nil)
+    def content_type_scope(content_type)
       nil
     end
 
