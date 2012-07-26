@@ -17,7 +17,11 @@ module Locomotive
       end
     end
 
-    attr_accessor :controller
+    attr_accessor :controller, :config
+
+    def initialize(config)
+      self.config = config
+    end
 
     def before_filters
       self.class.before_filters

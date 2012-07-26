@@ -5,9 +5,10 @@ module Locomotive
   describe Plugin do
 
     before(:each) do
-      @plugin = MyPlugin.new
-      @another_plugin = MyOtherPlugin.new
-      @useless_plugin = UselessPlugin.new
+      @config = {}
+      @plugin = MyPlugin.new(@config)
+      @another_plugin = MyOtherPlugin.new(@config)
+      @useless_plugin = UselessPlugin.new(@config)
     end
 
     it 'should store a list of before_filters' do
