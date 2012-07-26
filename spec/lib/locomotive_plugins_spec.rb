@@ -11,7 +11,7 @@ describe LocomotivePlugins do
     LocomotivePlugins.register_plugin(Locomotive::MyPlugin, 'my_amazing_plugin')
     registered = LocomotivePlugins.registered_plugins
     registered.count.should == 1
-    registered['my_amazing_plugin'].class.should == Locomotive::MyPlugin
+    registered['my_amazing_plugin'].should == Locomotive::MyPlugin
   end
 
   it 'should register plugins under the default id' do
@@ -19,7 +19,7 @@ describe LocomotivePlugins do
     LocomotivePlugins.register_plugin(Locomotive::MyPlugin)
     registered = LocomotivePlugins.registered_plugins
     registered.count.should == 1
-    registered[default_id].class.should == Locomotive::MyPlugin
+    registered[default_id].should == Locomotive::MyPlugin
   end
 
   it 'should use the underscorized class name without any modules as the default id' do

@@ -14,7 +14,7 @@ module LocomotivePlugins
   def self.register_plugin(plugin_class, plugin_id = nil)
     @@registered_plugins ||= {}
     plugin_id ||= self.default_id(plugin_class)
-    @@registered_plugins[plugin_id] = plugin_class.new
+    @@registered_plugins[plugin_id] = plugin_class
   end
 
   def self.registered_plugins
