@@ -9,3 +9,7 @@ group :test do
   gem 'factory_girl'
   gem 'mocha'
 end
+
+group :development do
+  gem 'bundler_geminabox'
+end
