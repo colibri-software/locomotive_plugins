@@ -6,3 +6,7 @@
 
 * Added config variable for plugins
 * Added README and CHANGELOG
+
+## v0.0.3
+
+* Added RDoc documentation for public API
