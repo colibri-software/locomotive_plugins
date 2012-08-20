@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'locomotive_liquid', '~> 2.2.2'
 
   s.files        = Dir['Rakefile',
-    *%w{bin,lib,man,test,spec}.collect { |dir| "#{dir}/**/*" },
+    *%w{bin lib man test spec}.collect { |dir| "#{dir}/**/*" },
     *%w{README LICENSE CHANGELOG}.collect { |file| "#{file}*" }
   ]
 
