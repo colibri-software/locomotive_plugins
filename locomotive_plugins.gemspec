@@ -14,13 +14,13 @@ Gem::Specification.new do |s|
 
   s.authors             = ['Colibri Software']
   s.email               = 'info@colibri-software.com'
-  s.homepage            = 'TODO'
+  s.homepage            = 'http://www.colibri-software.com'
 
   s.add_dependency 'locomotive_liquid', '~> 2.2.2'
 
   s.files        = Dir['Rakefile',
-    *%{bin,lib,man,test,spec}.collect |dir| { "#{dir}/**/*" },
-    *%{README LICENSE CHANGELOG}.collect |file| { "#{file}*" }
+    *%w{bin,lib,man,test,spec}.collect { |dir| "#{dir}/**/*" },
+    *%w{README LICENSE CHANGELOG}.collect { |file| "#{file}*" }
   ]
 
   if s.respond_to? :specification_version
