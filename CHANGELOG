@@ -1,3 +1,7 @@
+## v0.0.5
+
+* Fixed issues in gemspec file. Works as installed gem now
+
 ## v0.0.4
 
 * Fixed typo
