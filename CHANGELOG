@@ -1,16 +1,16 @@
-## v0.0.1
+## v0.0.4
 
-* Initial release
+* Fixed typo
+
+## v0.0.3
+
+* Added RDoc documentation for public API
 
 ## v0.0.2
 
 * Added config variable for plugins
 * Added README and CHANGELOG
 
-## v0.0.3
+## v0.0.1
 
-* Added RDoc documentation for public API
-
-## v0.0.4
-
-* Fixed typo
+* Initial release
