@@ -5,29 +5,23 @@ $:.unshift lib unless $:.include?(lib)
 require 'version'
 
 Gem::Specification.new do |s|
-  s.name = "locomotive_plugins"
-  s.version = LocomotivePlugins::VERSION
-  s.platform    = Gem::Platform::RUBY
+  s.name        = 'locomotive_plugins'
+  s.version     = LocomotivePlugins::VERSION
+  s.date        = Date.today.to_s
 
-  s.authors = ["Colibri Software"]
-  s.date = "2012-07-09"
-  s.description = "Gem for creating plugins for Locomotive"
-  s.email = "info@colibri-software.com"
-  s.extra_rdoc_files = ["lib/locomotive_plugins.rb"]
-  s.files = ["Rakefile", "lib/locomotive_plugins.rb", "Manifest", "locomotive_plugins.gemspec"]
-  s.homepage = "http://www.colibri-software.com"
-  s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Locomotive Plugins"]
-  s.require_paths = ["lib"]
-  s.summary = "lib/locomotive_plugins.rb"
+  s.summary             = 'Gem for creating plugins for Locomotive'
+  s.description         = 'This gem allows developers to create plugins for Locomotive CMS with particular functionality. See the README for more details'
 
-  s.required_rubygems_version = ">= 1.3.6"
+  s.authors             = ['Colibri Software']
+  s.email               = 'info@colibri-software.com'
+  s.homepage            = 'TODO'
 
   s.add_dependency 'locomotive_liquid', '~> 2.2.2'
 
-  s.files        = Dir["Rakefile",
-    'Gemfile',
-    '{lib}/**/*',
-    '{vendor}/**/*']
+  s.files        = Dir['Rakefile',
+    *%{bin,lib,man,test,spec}.collect |dir| { "#{dir}/**/*" },
+    *%{README LICENSE CHANGELOG}.collect |file| { "#{file}*" }
+  ]
 
   if s.respond_to? :specification_version
     s.specification_version = 3
