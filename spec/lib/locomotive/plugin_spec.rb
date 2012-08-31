@@ -31,6 +31,10 @@ module Locomotive
       @another_plugin.content_type_scope('my content type').should be_nil
     end
 
+    it 'should return the template string of an HTML file'
+
+    it 'should compile the template string for a HAML file'
+
     protected
 
     def first_drop

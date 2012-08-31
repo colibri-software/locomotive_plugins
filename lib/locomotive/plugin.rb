@@ -45,6 +45,19 @@ module Locomotive
       nil
     end
 
+    # Override this method to supply a path to the config UI template file.
+    # This file should be an HTML or HAML file using the Handlebars.js
+    # templating language.
+    def config_template_file
+      nil
+    end
+
+    # Override this method to supply the raw HTML string to be used for the
+    # config UI. The HTML string may be a Handlebars.js template.
+    def config_template_string
+      nil
+    end
+
   end
 
 end
