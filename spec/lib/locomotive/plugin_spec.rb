@@ -31,9 +31,20 @@ module Locomotive
       @another_plugin.content_type_scope('my content type').should be_nil
     end
 
-    it 'should return the template string of an HTML file'
+    describe 'config UI' do
 
-    it 'should compile the template string for a HAML file'
+      it 'should return the template string of an HTML file' do
+        filepath = @plugin.config_template_file
+        @plugin.config_template_string.should == IO.read(filepath)
+      end
+
+      it 'should return nil for the template string if no file is specified' do
+        @useless_plugin.config_template_string.should be_nil
+      end
+
+      it 'should compile the template string for a HAML file'
+
+    end
 
     protected
 
@@ -57,6 +68,11 @@ module Locomotive
 
       def content_type_scope(content_type)
         { :my_field => :my_value }
+      end
+
+      def config_template_file
+        File.join(File.dirname(__FILE__), '..', '..', 'fixtures',
+                  'config_template.html')
       end
 
       def my_method1

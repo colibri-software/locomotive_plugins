@@ -55,7 +55,13 @@ module Locomotive
     # Override this method to supply the raw HTML string to be used for the
     # config UI. The HTML string may be a Handlebars.js template.
     def config_template_string
-      nil
+      filepath = self.config_template_file
+
+      if filepath
+        IO.read(filepath)
+      else
+        nil
+      end
     end
 
   end
