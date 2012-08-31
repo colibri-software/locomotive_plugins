@@ -1,3 +1,4 @@
+require 'haml'
 
 module Locomotive
 
@@ -58,7 +59,11 @@ module Locomotive
       filepath = self.config_template_file
 
       if filepath
-        IO.read(filepath)
+        if filepath.end_with?('haml')
+          Haml::Engine.new(IO.read(filepath)).render
+        else
+          IO.read(filepath)
+        end
       else
         nil
       end

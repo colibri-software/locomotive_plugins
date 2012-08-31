@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.homepage            = 'http://www.colibri-software.com'
 
   s.add_dependency 'locomotive_liquid', '~> 2.2.2'
+  s.add_dependency 'haml',              '~> 3.1'
 
   s.files        = Dir['Rakefile',
     *%w{bin lib man test spec}.collect { |dir| "#{dir}/**/*" },

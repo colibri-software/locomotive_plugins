@@ -42,7 +42,12 @@ module Locomotive
         @useless_plugin.config_template_string.should be_nil
       end
 
-      it 'should compile the template string for a HAML file'
+      it 'should compile the template string for a HAML file' do
+        filepath = @another_plugin.config_template_file
+        haml = IO.read(filepath)
+        html = Haml::Engine.new(haml).render
+        @another_plugin.config_template_string.should == html
+      end
 
     end
 
@@ -88,6 +93,11 @@ module Locomotive
       include Locomotive::Plugin
 
       before_filter :another_method
+
+      def config_template_file
+        File.join(File.dirname(__FILE__), '..', '..', 'fixtures',
+                  'config_template.haml')
+      end
 
       def another_method
       end

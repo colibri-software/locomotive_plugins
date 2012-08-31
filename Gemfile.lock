@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     locomotive_plugins (0.0.6.alpha)
+      haml (~> 3.1)
       locomotive_liquid (~> 2.2.2)
 
 GEM
@@ -20,6 +21,7 @@ GEM
       builder
       httpclient
       sinatra
+    haml (3.1.7)
     httpclient (2.2.7)
     i18n (0.6.0)
     locomotive_liquid (2.2.3)
