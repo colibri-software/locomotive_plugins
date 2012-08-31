@@ -92,6 +92,19 @@ In this example, any content type which has been configured as a "protected"
 content type will only display to unauthenticated users if the `safe` field is
 `true`.
 
+### Config UI
+
+Plugins can provide a UI for setting configuration attributes. The UI should be
+written as a [Handlebars.js](http://handlebarsjs.com/) template. When the
+template is rendered, it is supplied with the array of content types in the
+CMS. This can be used, for example, to create a select box for selecting a
+content type to be acted upon by the plugin.
+
+A config UI can be specified by a plugin in a few ways. The preferred method is
+to override the  `config_template_file` method on the plugin class. This method
+must return a path to an HTML or HAML file. For more fine-grained control over
+how the string is generated, the `config_template_string` can be overridden to
+directly supply the HTML string to be rendered.
 
 ## Development
 
