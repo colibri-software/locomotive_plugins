@@ -1,3 +1,7 @@
+## v0.1.1
+
+* Fixed bug with non-string filepaths, such as Rails Pathname object
+
 ## v0.1.0
 
 * Plugins can supply a config UI in HTML or HAML
