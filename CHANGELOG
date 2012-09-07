@@ -1,3 +1,7 @@
+## v0.1.0
+
+* Plugins can supply a config UI in HTML or HAML
+
 ## v0.0.5
 
 * Fixed issues in gemspec file. Works as installed gem now
