@@ -38,6 +38,13 @@ module Locomotive
         @plugin.config_template_string.should == IO.read(filepath)
       end
 
+      it 'should handle non-string paths' do
+        @plugin_with_non_string_path = PluginWithNonStringPath.new(@config)
+        filepath = @plugin_with_non_string_path.config_template_file
+        template = @plugin_with_non_string_path.config_template_string
+        template.should == IO.read(filepath.to_s)
+      end
+
       it 'should return nil for the template string if no file is specified' do
         @useless_plugin.config_template_string.should be_nil
       end
@@ -108,6 +115,27 @@ module Locomotive
     end
 
     class MyDrop < ::Liquid::Drop
+    end
+
+    class PluginWithNonStringPath
+
+      include Locomotive::Plugin
+
+      class Pathname
+        def initialize(path)
+          @path = path
+        end
+
+        def to_s
+          @path.to_s || ''
+        end
+      end
+
+      def config_template_file
+        Pathname.new(File.join(File.dirname(__FILE__), '..', '..', 'fixtures',
+                  'config_template.html'))
+      end
+
     end
 
   end
