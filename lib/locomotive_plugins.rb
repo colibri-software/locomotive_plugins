@@ -1,8 +1,12 @@
 require 'rubygems'
 require 'bundler/setup'
+
 require 'liquid'
+require 'haml'
+require 'mongoid'
 
 require 'locomotive/plugin'
+require 'locomotive/plugin/db_model'
 
 # The overall module for registering plugins
 module LocomotivePlugins

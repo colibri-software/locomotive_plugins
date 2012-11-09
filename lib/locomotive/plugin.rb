@@ -1,4 +1,3 @@
-require 'haml'
 
 module Locomotive
 
@@ -21,8 +20,17 @@ module Locomotive
       def before_filters
         @before_filters ||= []
       end
+
+      # TODO: just a stub
+      def has_many(*args)
+      end
+
+      # TODO: just a stub
+      def has_one(*args)
+      end
     end
 
+    # These variables are set by LocomotiveCMS
     attr_accessor :controller, :config
 
     # Initialize by supplying the current config parameters

@@ -19,6 +19,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'locomotive_liquid', '~> 2.2.2'
   s.add_dependency 'haml',              '~> 3.1'
 
+  s.add_dependency 'bson_ext'
+  s.add_dependency 'mongoid',           '~> 2.4.12'
+
   s.files        = Dir['Rakefile',
     *%w{bin lib man test spec}.collect { |dir| "#{dir}/**/*" },
     *%w{README LICENSE CHANGELOG}.collect { |file| "#{file}*" }

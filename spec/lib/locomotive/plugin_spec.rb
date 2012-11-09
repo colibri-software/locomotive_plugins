@@ -58,6 +58,39 @@ module Locomotive
 
     end
 
+    describe 'DB Models' do
+
+      before(:each) do
+        LocomotivePlugins.register_plugin(PluginWithDBModel)
+        @plugin_with_db_model = PluginWithDBModel.new({})
+      end
+
+      it 'should persist DBModel items' do
+        @plugin_with_db_model.visit_count.build(count: 5)
+        @plugin_with_db_model.items.build(name: 'First Item')
+        @plugin_with_db_model.items.build(name: 'Second Item')
+
+        @plugin_with_db_model.save_db_models.should be_true
+
+        # Reload from the database
+        reloaded_plugin = PluginWithDBModel.new({})
+        reloaded_plugin.visit_count.count.should == 5
+
+        reloaded_plugin.items.count.should == 2
+        reloaded_plugin.items[0].name.should == 'First Item'
+        reloaded_plugin.items[1].name.should == 'Second Item'
+      end
+
+      it 'should allow mongoid queries on persisted DBModel items'
+
+      it 'should embed DBModel items in a document for the plugin_id'
+
+      it 'should run all validations for DBModel items'
+
+      it 'should fail if the plugin is not registered'
+
+    end
+
     protected
 
     def first_drop
@@ -135,6 +168,23 @@ module Locomotive
         Pathname.new(File.join(File.dirname(__FILE__), '..', '..', 'fixtures',
                   'config_template.html'))
       end
+
+    end
+
+    class PluginWithDBModel
+      include Locomotive::Plugin
+
+      class VisitCount < Locomotive::Plugin::DBModel
+        field :count, default: 0
+      end
+
+      class Item < Locomotive::Plugin::DBModel
+        field :name
+        validates_presence_of :name
+      end
+
+      has_one :visit_count, VisitCount
+      has_many :items, Item
 
     end
 
