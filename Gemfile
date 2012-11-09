@@ -8,6 +8,7 @@ group :test do
   gem 'rspec', '~> 2.3'
   gem 'factory_girl'
   gem 'mocha'
+  gem 'database_cleaner'
 end
 
 group :development do

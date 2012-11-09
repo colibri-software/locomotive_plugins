@@ -5,6 +5,7 @@ require 'bundler'
 require 'rspec'
 
 require 'factory_girl'
+require 'database_cleaner'
 
 
 
@@ -19,13 +20,35 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
 require 'locomotive_plugins'
 
+# Set up mongoid
+Mongoid.configure do |config|
+  config.master = Mongo::Connection.new.db('locomotive_plugins_test')
+end
+
 
 #FactoryGirl.find_definitions
 
 RSpec.configure do |config|
   config.mock_with :mocha
-  
+
    # Use color in STDOUT
   config.color_enabled = true
+
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.orm = 'mongoid'
+  end
+
+  config.before(:each) do
+    Mongoid::IdentityMap.clear
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.clean
+  end
+
+  config.after(:suite) do
+    DatabaseCleaner.clean
+  end
 
 end
