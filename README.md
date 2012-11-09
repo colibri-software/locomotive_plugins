@@ -106,6 +106,27 @@ must return a path to an HTML or HAML file. For more fine-grained control over
 how the string is generated, the `config_template_string` can be overridden to
 directly supply the HTML string to be rendered.
 
+## Database Models
+
+Plugins can persist data in the database through the use of DBModels. A DBModel
+has all the functionality of a Mongoid document. For example:
+
+    class VisitCount < Locomotive::Plugin::DBModel
+      field :count, default: 0
+    end
+
+    class VisitCounter
+      include Locomotive::Plugin
+
+      has_one :visit_count, VisitCount
+      before_filter :increment_count
+
+      def increment_count
+        visit_count ||= page_visit_count.build
+        visit_count.count += 1
+      end
+    end
+
 ## Development
 
 TODO
