@@ -7,8 +7,7 @@ module Locomotive
 
     def self.included(base)
       base.class_eval <<-CODE
-        class DBModelContainer
-          include ::Mongoid::Document
+        class DBModelContainer < ::Locomotive::Plugin::DBModelContainer
         end
 
         def self.db_model_container_class
@@ -69,8 +68,8 @@ module Locomotive
     # Initialize by supplying the current config parameters
     def initialize(config)
       self.config = config
-      @db_model_container = self.class.db_model_container_class.new
-      @db_model_container.save
+      self.load_or_create_db_model_container!
+      self.save_container
     end
 
     # Get all before filters which have been added to the controller
@@ -113,12 +112,23 @@ module Locomotive
       end
     end
 
+    # Save the DB Model container
     def save_container
-      @db_model_container.save
+      self.db_model_container.save
     end
 
+    # Get the DB Model container
     def db_model_container
-      @db_model_container
+      @db_model_container || load_or_create_db_model_container!
+    end
+
+    protected
+
+    def load_or_create_db_model_container!
+      plugin_id = LocomotivePlugins.registered_plugin_id_for_class(self.class)
+      @db_model_container = self.class.db_model_container_class.where(
+        plugin_id: plugin_id).first \
+        || self.class.db_model_container_class.new(plugin_id: plugin_id)
     end
 
   end

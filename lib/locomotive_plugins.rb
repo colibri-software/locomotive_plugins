@@ -7,6 +7,7 @@ require 'mongoid'
 
 require 'locomotive/plugin'
 require 'locomotive/plugin/db_model'
+require 'locomotive/plugin/db_model_container'
 
 # The overall module for registering plugins
 module LocomotivePlugins
@@ -17,7 +18,7 @@ module LocomotivePlugins
   end
 
   # Register a plugin class with a given ID. If no ID is given, the default ID
-  # is obtained by called <tt>default_id(plugin_class)</tt>
+  # is obtained by calling <tt>default_id(plugin_class)</tt>
   def self.register_plugin(plugin_class, plugin_id = nil)
     @@registered_plugins ||= {}
     plugin_id ||= self.default_id(plugin_class)
@@ -28,6 +29,15 @@ module LocomotivePlugins
   # were used to register the plugins
   def self.registered_plugins
     @@registered_plugins ||= {}
+  end
+
+  # Get the registered ID for the given class or nil if it's not registered
+  def self.registered_plugin_id_for_class(klass)
+    # TODO: inefficient
+    self.registered_plugins.each do |plugin_id, plugin_class|
+      return plugin_id if klass == plugin_class
+    end
+    nil
   end
 
   # Remove all plugins from the registered list

@@ -66,18 +66,11 @@ module Locomotive
       end
 
       it 'should persist DBModel items' do
-        puts 'Start'
-        puts 'Build visit count'
         @plugin_with_db_model.build_visit_count(count: 5)
-        puts 'Build first item'
         @plugin_with_db_model.items.build(name: 'First Item')
         @plugin_with_db_model.items.build(name: 'Second Item')
 
         @plugin_with_db_model.save_container.should be_true
-
-        puts @plugin_with_db_model.db_model_container.inspect
-        puts @plugin_with_db_model.db_model_container.items.inspect
-        puts @plugin_with_db_model.db_model_container.visit_counter.inspect
 
         # Reload from the database
         reloaded_plugin = PluginWithDBModel.new({})
