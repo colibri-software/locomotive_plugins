@@ -1,3 +1,7 @@
+## v0.2.0
+
+* Added DBModel functionality
+
 ## v0.1.1
 
 * Fixed bug with non-string filepaths, such as Rails Pathname object
