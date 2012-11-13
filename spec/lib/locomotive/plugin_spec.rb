@@ -61,7 +61,6 @@ module Locomotive
     describe 'DB Models' do
 
       before(:each) do
-        LocomotivePlugins.register_plugin(PluginWithDBModel)
         plugin = PluginWithDBModel.new({})
         plugin.build_visit_count(count: 5)
         plugin.items.build(name: 'First Item')
