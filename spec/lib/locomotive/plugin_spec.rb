@@ -100,7 +100,14 @@ module Locomotive
           == Mongoid::Relations::Embedded::In
       end
 
-      it 'should run all validations for DBModel items'
+      it 'should run all validations for DBModel items' do
+        @plugin_with_db_model.items.build(name: '')
+        @plugin_with_db_model.save_db_model_container.should be_false
+
+        @plugin_with_db_model.db_model_container.errors.messages.should == {
+          :items => [ 'is invalid' ]
+        }
+      end
 
       it 'should fail if the plugin is not registered'
 
