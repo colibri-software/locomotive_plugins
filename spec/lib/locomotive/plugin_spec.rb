@@ -70,7 +70,7 @@ module Locomotive
         @plugin_with_db_model.items.build(name: 'First Item')
         @plugin_with_db_model.items.build(name: 'Second Item')
 
-        @plugin_with_db_model.save_container.should be_true
+        @plugin_with_db_model.save_db_model_container.should be_true
 
         # Reload from the database
         reloaded_plugin = PluginWithDBModel.new({})
@@ -81,7 +81,20 @@ module Locomotive
         reloaded_plugin.items[1].name.should == 'Second Item'
       end
 
-      it 'should allow mongoid queries on persisted DBModel items'
+      it 'should allow mongoid queries on persisted DBModel items' do
+        @plugin_with_db_model.items.build(name: 'First Item')
+        @plugin_with_db_model.items.build(name: 'Second Item')
+
+        @plugin_with_db_model.save_db_model_container.should be_true
+
+        # Reload from the database
+        reloaded_plugin = PluginWithDBModel.new({})
+        reloaded_plugin.items.where(name: /First/).count.should == 1
+        reloaded_plugin.items.where(name: /First/).first.name.should == 'First Item'
+        reloaded_plugin.items.where(name: /Item/).count.should == 2
+        reloaded_plugin.items.where(name: /Item/)[0].name.should == 'First Item'
+        reloaded_plugin.items.where(name: /Item/)[1].name.should == 'Second Item'
+      end
 
       it 'should embed DBModel items in a document for the plugin_id'
 

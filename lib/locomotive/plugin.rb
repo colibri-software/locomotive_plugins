@@ -69,7 +69,7 @@ module Locomotive
     def initialize(config)
       self.config = config
       self.load_or_create_db_model_container!
-      self.save_container
+      self.save_db_model_container
     end
 
     # Get all before filters which have been added to the controller
@@ -113,7 +113,7 @@ module Locomotive
     end
 
     # Save the DB Model container
-    def save_container
+    def save_db_model_container
       self.db_model_container.save
     end
 
