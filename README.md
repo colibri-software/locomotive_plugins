@@ -122,7 +122,7 @@ has all the functionality of a Mongoid document. For example:
       before_filter :increment_count
 
       def increment_count
-        visit_count ||= page_visit_count.build
+        build_visit_count unless visit_count
         visit_count.count += 1
       end
     end
