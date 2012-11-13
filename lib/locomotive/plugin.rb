@@ -125,10 +125,8 @@ module Locomotive
     protected
 
     def load_or_create_db_model_container!
-      plugin_id = LocomotivePlugins.registered_plugin_id_for_class(self.class)
-      @db_model_container = self.class.db_model_container_class.where(
-        plugin_id: plugin_id).first \
-        || self.class.db_model_container_class.new(plugin_id: plugin_id)
+      @db_model_container = self.class.db_model_container_class.first \
+        || self.class.db_model_container_class.new
     end
 
   end

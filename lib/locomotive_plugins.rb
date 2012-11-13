@@ -31,15 +31,6 @@ module LocomotivePlugins
     @@registered_plugins ||= {}
   end
 
-  # Get the registered ID for the given class or nil if it's not registered
-  def self.registered_plugin_id_for_class(klass)
-    # TODO: inefficient
-    self.registered_plugins.each do |plugin_id, plugin_class|
-      return plugin_id if klass == plugin_class
-    end
-    nil
-  end
-
   # Remove all plugins from the registered list
   def self.clear_registered_plugins
     @@registered_plugins = {}
