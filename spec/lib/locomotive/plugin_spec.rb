@@ -109,8 +109,6 @@ module Locomotive
         }
       end
 
-      it 'should fail if the plugin is not registered'
-
     end
 
     protected
