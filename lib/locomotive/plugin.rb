@@ -65,11 +65,19 @@ module Locomotive
     # These variables are set by LocomotiveCMS
     attr_accessor :controller, :config
 
-    # Initialize by supplying the current config parameters
+    # Initialize by supplying the current config parameters. Note that this
+    # method should not be overridden for custom initialization of plugin
+    # objects. Instead, override the initialize_plugin method
     def initialize(config)
       self.config = config
       self.load_or_create_db_model_container!
       self.save_db_model_container
+      self.initialize_plugin
+    end
+
+    # Override this method to supply custom initialization code for the plugin
+    # object
+    def initialize_plugin
     end
 
     # Get all before filters which have been added to the controller

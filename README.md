@@ -26,6 +26,20 @@ different ID, simply supply the ID in the `register_plugin` call:
 
     LocomotivePlugins::register_plugin(BasicAuth, 'auth')
 
+### Initialization
+
+To initialize a plugin object, do not override the `initialize` method because
+this method is defined by the `Locomotive::Plugin` module and used by
+Locomotive. Instead, override the `initialize_plugin` method.
+
+    class MyPlugin
+      include Locomotive::Plugin
+
+      def initialize_plugin
+        # Custom initialization code
+      end
+    end
+
 ### Before filters
 
 A plugin may add a before filter which is run before every page load on the

@@ -11,6 +11,10 @@ module Locomotive
       @useless_plugin = UselessPlugin.new(@config)
     end
 
+    it 'should call custom initialization methods' do
+      @plugin.custom_attribute.should == 'Value'
+    end
+
     it 'should store a list of before_filters' do
       @plugin.before_filters.count.should == 2
       @plugin.before_filters[0].should == :my_method1
@@ -125,6 +129,12 @@ module Locomotive
 
       before_filter :my_method1
       before_filter :my_method2
+
+      attr_accessor :custom_attribute
+
+      def initialize_plugin
+        self.custom_attribute = 'Value'
+      end
 
       def to_liquid
         MyDrop.new
