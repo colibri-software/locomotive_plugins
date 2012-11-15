@@ -78,7 +78,7 @@ Plugin code:
 
 Liquid code:
 
-    <p>Your User ID is: {{ plugins.basic_auth }}</p>
+    <p>Your User ID is: {{ plugins.basic_auth.userid }}</p>
 
 This liquid code assumes that the plugin has been registered under the default
 ID as described above.
