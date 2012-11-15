@@ -63,6 +63,8 @@ the Locomotive UI.
 
 ### Liquid
 
+#### Drops
+
 A plugin can add a liquid drop which can be accessed from page templates in
 LocomotiveCMS. To do so, override the `to_liquid` method.
 
@@ -82,6 +84,35 @@ Liquid code:
 
 This liquid code assumes that the plugin has been registered under the default
 ID as described above.
+
+#### Filters
+
+A plugin can add liquid filters:
+
+    module Filters
+
+      def add_http_prefix(input)
+        if input.start_with?('http://')
+          input
+        else
+          "http://#{input}"
+        end
+      end
+
+    end
+
+    class MyPlugin
+      include Locomotive::Plugin
+
+      def liquid_filters
+        Filters
+      end
+    end
+
+The filter will automatically be prefixed with the plugin ID in the liquid
+code:
+
+    <a href="{{ page.link | my_plugin_add_http_prefix }}">Click here!</a>
 
 ### Content Type Scope
 
