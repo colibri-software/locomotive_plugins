@@ -35,6 +35,11 @@ module Locomotive
       @another_plugin.content_type_scope('my content type').should be_nil
     end
 
+    it 'should optionally return liquid filters' do
+      @plugin.liquid_filters.should == MyPlugin::Filters
+      @another_plugin.liquid_filters.should be_nil
+    end
+
     describe 'config UI' do
 
       it 'should return the template string of an HTML file' do
@@ -127,6 +132,9 @@ module Locomotive
     class MyPlugin
       include Locomotive::Plugin
 
+      module Filters
+      end
+
       before_filter :my_method1
       before_filter :my_method2
 
@@ -147,6 +155,10 @@ module Locomotive
       def config_template_file
         File.join(File.dirname(__FILE__), '..', '..', 'fixtures',
                   'config_template.html')
+      end
+
+      def liquid_filters
+        Filters
       end
 
       def my_method1

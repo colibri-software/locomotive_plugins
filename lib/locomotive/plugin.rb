@@ -130,6 +130,14 @@ module Locomotive
       @db_model_container || load_or_create_db_model_container!
     end
 
+    # Override this method to provide a module or array of modules to include
+    # as liquid filters in the site. All public methods in the module will be
+    # included as filters after being prefixed with the plugin id
+    # ({plugin_id}_{method_name})
+    def liquid_filters
+      nil
+    end
+
     protected
 
     def load_or_create_db_model_container!
