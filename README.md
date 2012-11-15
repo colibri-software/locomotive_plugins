@@ -91,7 +91,7 @@ A plugin can add liquid filters:
 
     module Filters
 
-      def add_http_prefix(input)
+      def add_http(input)
         if input.start_with?('http://')
           input
         else
@@ -112,7 +112,7 @@ A plugin can add liquid filters:
 The filter will automatically be prefixed with the plugin ID in the liquid
 code:
 
-    <a href="{{ page.link | my_plugin_add_http_prefix }}">Click here!</a>
+    <a href="{{ page.link | my_plugin_add_http }}">Click here!</a>
 
 ### Content Type Scope
 
