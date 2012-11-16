@@ -30,6 +30,16 @@ module Locomotive
 
       end
 
+      describe 'liquid tags' do
+
+        it 'supplies the prefixed tag names along with subclasses of the tag classes'
+
+        it 'only renders the tags if it is enabled in the liquid context'
+
+        it 'uses render_disabled if the plugin is not enabled'
+
+      end
+
     end
   end
 end

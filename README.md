@@ -104,15 +104,65 @@ A plugin can add liquid filters:
     class MyPlugin
       include Locomotive::Plugin
 
-      def liquid_filters
+      def self.liquid_filters
         Filters
       end
     end
 
-The filter will automatically be prefixed with the plugin ID in the liquid
-code:
+Locomotive will automatically prefix the filter with the plugin ID in the
+liquid code:
 
     <a href="{{ page.link | my_plugin_add_http }}">Click here!</a>
+
+#### Tags
+
+A plugin may also supply custom liquid tags. The custom tag class may override
+the `render_disabled` method to specify what should be rendered if the plugin
+is not enabled. By default, this will be the empty string. For example:
+
+    # Note that Liquid::Block is a subclass of Liquid::Tag
+    class Paragraph < Liquid::Block
+      def render(context)
+        "<p>#{render_all(@nodelist, context)}</p>"
+      end
+
+      def render_disabled(context)
+        render_all(@nodelist, context)
+      end
+    end
+
+    class Newline < Liquid::Tag
+      def render(context)
+        "<br />"
+      end
+    end
+
+    class MyPlugin
+      include Locomotive::Plugin
+
+      def self.liquid_tags
+        {
+          :paragraph => Paragraph,
+          :newline => Newline
+        }
+      end
+    end
+
+Locomotive will automatically prefix the tag with the plugin ID in the liquid
+code. Consider the following liquid code:
+
+    {% my_plugin_paragraph %}Some Text{% endmy_plugin_paragraph %}
+    Some Text{% my_plugin_newline %}
+
+When `MyPlugin` is enabled, the code will be rendered to:
+
+    <p>Some Text</p>
+    Some Text<br />
+
+When `MyPlugin` is disabled, the code will be rendered to:
+
+    Some Text
+    Some Text
 
 ### Content Type Scope
 
