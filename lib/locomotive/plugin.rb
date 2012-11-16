@@ -1,19 +1,20 @@
 
+Dir.glob(File.join(File.dirname(__FILE__), 'plugin', '**', '*.rb')) do |f|
+  require f
+end
+
 module Locomotive
 
   # Include this module in a class which should be registered as a Locomotive
   # plugin
   module Plugin
 
-    def self.included(base)
-      base.class_eval <<-CODE
-        class DBModelContainer < ::Locomotive::Plugin::DBModelContainer
-        end
+    include ConfigUI
+    include DBModels
+    include Liquid
 
-        def self.db_model_container_class
-          DBModelContainer
-        end
-      CODE
+    def self.included(base)
+      self.add_db_model_class_methods(base)
       base.extend ClassMethods
     end
 
@@ -31,34 +32,12 @@ module Locomotive
 
       # Create a mongoid relationship to objects of the given class
       def has_many(name, klass)
-        db_model_container_class.embeds_many(name, class_name: klass.to_s,
-          inverse_of: :db_model_container)
-        klass.embedded_in(:db_model_container,
-          class_name: db_model_container_class.to_s, inverse_of: name)
-
-        define_passthrough_methods_to_container(name, "#{name}=")
+        self.create_has_many_relationship(name, klass)
       end
 
       # Create a mongoid relationship to object of the given class
       def has_one(name, klass)
-        db_model_container_class.embeds_one(name, class_name: klass.to_s,
-          inverse_of: :db_model_container)
-        klass.embedded_in(:db_model_container,
-          class_name: db_model_container_class.to_s, inverse_of: name)
-
-        define_passthrough_methods_to_container(name, "#{name}=",
-          "build_#{name}", "create_#{name}")
-      end
-
-      # :nodoc:
-      def define_passthrough_methods_to_container(*methods)
-        class_eval <<-EOF
-          %w{#{methods.join(' ')}}.each do |meth|
-            define_method(meth) do |*args|
-              @db_model_container.send(meth, *args)
-            end
-          end
-        EOF
+        self.create_has_one_relationship(name, klass)
       end
     end
 
@@ -104,30 +83,11 @@ module Locomotive
     end
 
     # Override this method to supply the raw HTML string to be used for the
-    # config UI. The HTML string may be a Handlebars.js template.
+    # config UI. The HTML string may be a Handlebars.js template. By default,
+    # this method will use the file supplied by the config_template_file method
+    # to construct the string
     def config_template_string
-      filepath = self.config_template_file
-
-      if filepath
-        filepath = filepath.to_s
-        if filepath.end_with?('haml')
-          Haml::Engine.new(IO.read(filepath)).render
-        else
-          IO.read(filepath)
-        end
-      else
-        nil
-      end
-    end
-
-    # Save the DB Model container
-    def save_db_model_container
-      self.db_model_container.save
-    end
-
-    # Get the DB Model container
-    def db_model_container
-      @db_model_container || load_or_create_db_model_container!
+      self.default_config_template_string
     end
 
     # Override this method to provide a module or array of modules to include
@@ -136,47 +96,6 @@ module Locomotive
     # ({plugin_id}_{method_name})
     def liquid_filters
       nil
-    end
-
-    # Gets the module to include as a filter in liquid. It prefixes the filter
-    # methods with the given string
-    def prefixed_liquid_filter_module(prefix)
-      raw_filter_modules = [self.liquid_filters].flatten.compact
-
-      @prefixed_liquid_filter_module = Module.new
-
-      raw_filter_modules.each do |mod|
-        @prefixed_liquid_filter_module.class_eval <<-CODE
-          protected
-
-          def _passthrough_object_for_#{prefix}
-            if @_passthrough_object_for_#{prefix}
-              return @_passthrough_object_for_#{prefix}
-            end
-
-            @_passthrough_object_for_#{prefix} = Object.new
-            @_passthrough_object_for_#{prefix}.extend(#{mod.to_s})
-            @_passthrough_object_for_#{prefix}
-          end
-        CODE
-
-        mod.public_instance_methods.each do |meth|
-          @prefixed_liquid_filter_module.class_eval <<-CODE
-            def #{prefix}_#{meth}(input)
-              self._passthrough_object_for_#{prefix}.#{meth}(input)
-            end
-          CODE
-        end
-      end
-
-      @prefixed_liquid_filter_module
-    end
-
-    protected
-
-    def load_or_create_db_model_container!
-      @db_model_container = self.class.db_model_container_class.first \
-        || self.class.db_model_container_class.new
     end
 
   end

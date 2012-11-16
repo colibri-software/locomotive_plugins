@@ -26,12 +26,4 @@ describe LocomotivePlugins do
     LocomotivePlugins.default_id(Locomotive::MyPlugin).should == 'my_plugin'
   end
 
-  protected
-
-  module Locomotive
-    class MyPlugin
-      include Locomotive::Plugin
-    end
-  end
-
 end

@@ -6,8 +6,6 @@ require 'haml'
 require 'mongoid'
 
 require 'locomotive/plugin'
-require 'locomotive/plugin/db_model'
-require 'locomotive/plugin/db_model_container'
 
 # The overall module for registering plugins
 module LocomotivePlugins
