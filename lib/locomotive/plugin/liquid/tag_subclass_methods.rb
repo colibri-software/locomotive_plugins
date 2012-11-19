@@ -4,7 +4,8 @@ module Locomotive
     module Liquid
       module TagSubclassMethods
         def render(context)
-          if context.registers[:enabled_plugin_tags].include?(self.class)
+          enabled = context.registers[:enabled_plugin_tags]
+          if enabled && enabled.include?(self.class)
             super
           elsif self.respond_to?(:render_disabled)
             self.render_disabled(context)

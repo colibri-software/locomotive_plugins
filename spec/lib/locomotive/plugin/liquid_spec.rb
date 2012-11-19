@@ -85,6 +85,19 @@ module Locomotive
           template.render(@context).should == expected_output
         end
 
+        it 'uses render_disabled or empty string if no plugin is enabled' do
+          @context.registers.delete(:enabled_plugin_tags)
+
+          expected_output = <<-TEMPLATE
+            Some Text
+            Some Text
+          TEMPLATE
+
+          register_tags(@prefixed_tags)
+          template = ::Liquid::Template.parse(@raw_template)
+          template.render(@context).should == expected_output
+        end
+
         protected
 
         def register_tags(tags)
