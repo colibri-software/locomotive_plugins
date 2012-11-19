@@ -31,8 +31,20 @@ module Locomotive
         it 'includes multiple filter modules for one plugin' do
           @plugin_with_many_filter_modules = PluginWithManyFilterModules.new({})
           mod = @plugin_with_many_filter_modules.prefixed_liquid_filter_module('prefix')
-          mod.public_instance_methods.should include(:prefix_add_http)
+          mod.public_instance_methods.should include(:prefix_add_newline)
           mod.public_instance_methods.should include(:prefix_remove_http)
+        end
+
+        it 'works if multiple prefixed modules are mixed into the same object' do
+          @plugin_with_many_filter_modules = PluginWithManyFilterModules.new({})
+
+          obj = Object.new
+          obj.extend(@plugin_with_filter.prefixed_liquid_filter_module('prefix1'))
+          obj.extend(@plugin_with_many_filter_modules.prefixed_liquid_filter_module('prefix2'))
+
+          obj.prefix1_add_http('google.com').should == 'http://google.com'
+          obj.prefix2_add_newline('google.com').should == "google.com\n"
+          obj.prefix2_remove_http('http://google.com').should == 'google.com'
         end
 
       end

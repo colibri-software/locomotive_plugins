@@ -43,13 +43,8 @@ module Locomotive
       # Gets the module to include as a filter in liquid. It prefixes the filter
       # methods with the given string
       def prefixed_liquid_filter_module(prefix)
-        # Set up module to include prefixed filter methods
-        @prefixed_liquid_filter_module = Module.new do
-          include ::Locomotive::Plugin::Liquid::PrefixedFilterModule
-        end
-
         # Build up a string to eval into the module so we only need to reopen
-        # the module once
+        # it once
         strings_to_eval = []
 
         raw_filter_modules = [self.class.liquid_filters].flatten.compact
@@ -57,7 +52,7 @@ module Locomotive
           mod.public_instance_methods.each do |meth|
             strings_to_eval << <<-CODE
               def #{prefix}_#{meth}(input)
-                self._passthrough_filter_call('#{meth}', input)
+                self._passthrough_filter_call_for_#{prefix}('#{meth}', input)
               end
             CODE
           end
@@ -66,12 +61,20 @@ module Locomotive
         strings_to_eval << <<-CODE
           protected
 
-          def _filter_modules_to_extend
-            [ #{raw_filter_modules.join(', ')} ]
+          def _passthrough_object_for_#{prefix}
+            @_passthrough_object_for_#{prefix} ||= \
+              self._build_passthrough_object([#{raw_filter_modules.join(',')}])
+          end
+
+          def _passthrough_filter_call_for_#{prefix}(meth, input)
+            self._passthrough_object_for_#{prefix}.public_send(meth, input)
           end
         CODE
 
         # Eval the dynamic methods in
+        @prefixed_liquid_filter_module = Module.new do
+          include ::Locomotive::Plugin::Liquid::PrefixedFilterModule
+        end
         @prefixed_liquid_filter_module.class_eval strings_to_eval.join("\n")
         @prefixed_liquid_filter_module
       end

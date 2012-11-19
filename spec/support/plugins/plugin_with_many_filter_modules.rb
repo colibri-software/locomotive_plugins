@@ -4,12 +4,8 @@ module Locomotive
     include Locomotive::Plugin
 
     module Filters
-      def add_http(input)
-        if input.start_with?('http://')
-          input
-        else
-          "http://#{input}"
-        end
+      def add_newline(input)
+        "#{input}\n"
       end
     end
 
