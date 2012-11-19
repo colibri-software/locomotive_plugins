@@ -28,6 +28,13 @@ module Locomotive
           obj.prefix_add_http('http://google.com').should == 'http://google.com'
         end
 
+        it 'includes multiple filter modules for one plugin' do
+          @plugin_with_many_filter_modules = PluginWithManyFilterModules.new({})
+          mod = @plugin_with_many_filter_modules.prefixed_liquid_filter_module('prefix')
+          mod.public_instance_methods.should include(:prefix_add_http)
+          mod.public_instance_methods.should include(:prefix_remove_http)
+        end
+
       end
 
       describe 'liquid tags' do

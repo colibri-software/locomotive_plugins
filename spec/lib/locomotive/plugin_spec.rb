@@ -35,8 +35,8 @@ module Locomotive
     end
 
     it 'should optionally return liquid filters' do
-      @plugin.liquid_filters.should == MyPlugin::Filters
-      @useless_plugin.liquid_filters.should be_nil
+      MyPlugin.liquid_filters.should == MyPlugin::Filters
+      UselessPlugin.liquid_filters.should be_nil
     end
 
     it 'should optionally return liquid tags' do

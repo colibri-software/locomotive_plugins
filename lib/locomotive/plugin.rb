@@ -31,6 +31,14 @@ module Locomotive
         @before_filters ||= []
       end
 
+      # Override this method to provide a module or array of modules to include
+      # as liquid filters in the site. All public methods in the module will be
+      # included as filters after being prefixed with the plugin id
+      # ({plugin_id}_{method_name})
+      def liquid_filters
+        nil
+      end
+
       # Override this method to specify the liquid tags supplied by this
       # plugin. The return value must be a hash whose keys are the tag names
       # and values are the tag classes
@@ -96,14 +104,6 @@ module Locomotive
     # to construct the string
     def config_template_string
       self.default_config_template_string
-    end
-
-    # Override this method to provide a module or array of modules to include
-    # as liquid filters in the site. All public methods in the module will be
-    # included as filters after being prefixed with the plugin id
-    # ({plugin_id}_{method_name})
-    def liquid_filters
-      nil
     end
 
   end

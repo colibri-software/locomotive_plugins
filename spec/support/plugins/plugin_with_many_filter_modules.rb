@@ -1,6 +1,6 @@
 
 module Locomotive
-  class PluginWithFilter
+  class PluginWithManyFilterModules
     include Locomotive::Plugin
 
     module Filters
@@ -13,8 +13,14 @@ module Locomotive
       end
     end
 
+    module MoreFilters
+      def remove_http(input)
+        input.sub(%r{^http://}, '')
+      end
+    end
+
     def self.liquid_filters
-      Filters
+      [ Filters, MoreFilters ]
     end
 
   end

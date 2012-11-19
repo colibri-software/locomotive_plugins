@@ -31,7 +31,7 @@ module Locomotive
         'config_template.html')
     end
 
-    def liquid_filters
+    def self.liquid_filters
       Filters
     end
 
