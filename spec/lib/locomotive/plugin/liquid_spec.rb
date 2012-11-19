@@ -32,11 +32,59 @@ module Locomotive
 
       describe 'liquid tags' do
 
-        it 'supplies the prefixed tag names along with subclasses of the tag classes'
+        before(:each) do
+          @plugin_class = PluginWithTags
+          @prefixed_tags = @plugin_class.prefixed_liquid_tags('prefix')
 
-        it 'only renders the tags if it is enabled in the liquid context'
+          @enabled_tags = []
+          @context = ::Liquid::Context.new
+          @context.registers[:enabled_plugin_tags] = @enabled_tags
 
-        it 'uses render_disabled if the plugin is not enabled'
+          @raw_template = <<-TEMPLATE
+            {% prefix_paragraph %}Some Text{% endprefix_paragraph %}
+            Some Text{% prefix_newline %}
+          TEMPLATE
+        end
+
+        it 'supplies the prefixed tag names along with subclasses of the tag classes' do
+          @prefixed_tags.size.should == 2
+          @prefixed_tags['prefix_paragraph'].should be < PluginWithTags::Paragraph
+          @prefixed_tags['prefix_newline'].should be < PluginWithTags::Newline
+        end
+
+        it 'only renders a tag if it is enabled in the liquid context' do
+          expected_output = <<-TEMPLATE
+            <p>Some Text</p>
+            Some Text<br />
+          TEMPLATE
+
+          register_tags(@prefixed_tags)
+          template = ::Liquid::Template.parse(@raw_template)
+          template.render(@context).should_not == expected_output
+
+          @enabled_tags << @prefixed_tags['prefix_paragraph']
+          @enabled_tags << @prefixed_tags['prefix_newline']
+          template.render(@context).should == expected_output
+        end
+
+        it 'uses render_disabled or empty string if the plugin is not enabled' do
+          expected_output = <<-TEMPLATE
+            Some Text
+            Some Text
+          TEMPLATE
+
+          register_tags(@prefixed_tags)
+          template = ::Liquid::Template.parse(@raw_template)
+          template.render(@context).should == expected_output
+        end
+
+        protected
+
+        def register_tags(tags)
+          tags.each do |name, klass|
+            ::Liquid::Template.register_tag(name, klass)
+          end
+        end
 
       end
 

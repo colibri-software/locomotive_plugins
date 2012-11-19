@@ -39,5 +39,13 @@ module Locomotive
       @useless_plugin.liquid_filters.should be_nil
     end
 
+    it 'should optionally return liquid tags' do
+      MyPlugin.liquid_tags.should == {}
+      PluginWithTags.liquid_tags.should == {
+        :paragraph => PluginWithTags::Paragraph,
+        :newline => PluginWithTags::Newline
+      }
+    end
+
   end
 end

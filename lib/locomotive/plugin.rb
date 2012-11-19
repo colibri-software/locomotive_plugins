@@ -15,6 +15,7 @@ module Locomotive
 
     def self.included(base)
       self.add_db_model_class_methods(base)
+      self.add_liquid_tag_methods(base)
       base.extend ClassMethods
     end
 
@@ -28,6 +29,13 @@ module Locomotive
       # Get list of before filters
       def before_filters
         @before_filters ||= []
+      end
+
+      # Override this method to specify the liquid tags supplied by this
+      # plugin. The return value must be a hash whose keys are the tag names
+      # and values are the tag classes
+      def liquid_tags
+        {}
       end
 
       # Create a mongoid relationship to objects of the given class
