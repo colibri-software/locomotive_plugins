@@ -86,11 +86,6 @@ module Locomotive
       nil
     end
 
-    # Override this method to provide a scope for the given content type
-    def content_type_scope(content_type)
-      nil
-    end
-
     # Override this method to supply a path to the config UI template file.
     # This file should be an HTML or HAML file using the Handlebars.js
     # templating language.

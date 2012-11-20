@@ -22,10 +22,6 @@ module Locomotive
       MyDrop.new
     end
 
-    def content_type_scope(content_type)
-      { :my_field => :my_value }
-    end
-
     def config_template_file
       File.join(File.dirname(__FILE__), '..', '..', 'fixtures',
         'config_template.html')

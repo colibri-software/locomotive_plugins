@@ -29,11 +29,6 @@ module Locomotive
       @useless_plugin.to_liquid.should be_nil
     end
 
-    it 'should optionally return a content type scope' do
-      @plugin.content_type_scope('my content type').should == { :my_field => :my_value }
-      @useless_plugin.content_type_scope('my content type').should be_nil
-    end
-
     it 'should optionally return liquid filters' do
       MyPlugin.liquid_filters.should == MyPlugin::Filters
       UselessPlugin.liquid_filters.should be_nil

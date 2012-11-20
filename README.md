@@ -164,29 +164,6 @@ When `MyPlugin` is disabled, the code will be rendered to:
     Some Text
     Some Text
 
-### Content Type Scope
-
-A plugin can provide a scope to be used when looping over a content type. To provide this scope, override the `content_type_scope` method.
-
-    class BasicAuth
-      include Locomotive::Plugin
-
-      def content_type_scope(content_type)
-        protected_content_type = config[:protected_content_types].include?(content_type.slug)
-        logged_in = self.user_logged_in?
-
-        if protected_content_type && !logged_in
-          { :safe => true }
-        else
-          nil
-        end
-      end
-    end
-
-In this example, any content type which has been configured as a "protected"
-content type will only display to unauthenticated users if the `safe` field is
-`true`.
-
 ### Config UI
 
 Plugins can provide a UI for setting configuration attributes. The UI should be
