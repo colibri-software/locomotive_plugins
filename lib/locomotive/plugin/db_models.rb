@@ -1,13 +1,15 @@
 
 module Locomotive
   module Plugin
+
+    # Utility methods for dealing with DB Models
     module DBModels
 
-      def self.included(base)
+      def self.included(base) # :nodoc:
         base.extend ClassMethods
       end
 
-      module ClassMethods
+      module ClassMethods # :nodoc:
 
         def add_db_model_class_methods(base)
           base.class_eval <<-CODE
@@ -23,7 +25,7 @@ module Locomotive
 
       end
 
-      module DBModelClassMethods
+      module DBModelClassMethods # :nodoc:
 
         protected
 
@@ -58,11 +60,15 @@ module Locomotive
 
       end
 
+      # :category: Utility
+      #
       # Save the DB Model container
       def save_db_model_container
         self.db_model_container.save
       end
 
+      # :category: Utility
+      #
       # Get the DB Model container
       def db_model_container
         @db_model_container || load_or_create_db_model_container!
@@ -70,11 +76,12 @@ module Locomotive
 
       protected
 
-      def load_or_create_db_model_container!
+      def load_or_create_db_model_container! # :nodoc:
         @db_model_container = self.class.db_model_container_class.first \
           || self.class.db_model_container_class.new
       end
 
     end
+
   end
 end

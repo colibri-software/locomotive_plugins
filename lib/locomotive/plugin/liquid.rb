@@ -3,11 +3,11 @@ module Locomotive
   module Plugin
     module Liquid
 
-      def self.included(base)
+      def self.included(base) # :nodoc:
         base.extend(ClassMethods)
       end
 
-      module ClassMethods
+      module ClassMethods # :nodoc:
         def add_liquid_tag_methods(base)
           base.extend(LiquidTagMethods)
         end
@@ -15,6 +15,8 @@ module Locomotive
 
       module LiquidTagMethods
 
+        # :category: Utility
+        #
         # Returns a hash of tag names and tag classes to be registered in the
         # liquid environment. The tag names are prefixed by the given prefix,
         # and the tag classes are modified so that they check the liquid
@@ -28,8 +30,7 @@ module Locomotive
         end
 
         # Creates a nested subclass to handle rendering this tag
-        # :nodoc:
-        def tag_subclass(tag_class)
+        def tag_subclass(tag_class) # :nodoc:
           tag_class.class_eval <<-CODE
             class TagSubclass < #{tag_class.to_s}
               include ::Locomotive::Plugin::TagSubclassMethods
@@ -40,8 +41,10 @@ module Locomotive
 
       end
 
-      # Gets the module to include as a filter in liquid. It prefixes the filter
-      # methods with the given string
+      # :category: Utility
+      #
+      # Gets the module to include as a filter in liquid. It prefixes the
+      # filter methods with the given string
       def prefixed_liquid_filter_module(prefix)
         # Build up a string to eval into the module so we only need to reopen
         # it once

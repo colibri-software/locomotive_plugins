@@ -1,7 +1,7 @@
 
 module Locomotive
   module Plugin
-    module ConfigUI
+    module ConfigUI # :nodoc:
 
       protected
 

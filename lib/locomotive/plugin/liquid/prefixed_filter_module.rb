@@ -5,8 +5,7 @@ module Locomotive
       # This module provides functionality for the module which aggregates all
       # the prefixed filter methods. See
       # <tt>Locomotive::Plugin::Liquid#prefixed_liquid_filter_module</tt>
-      # :nodoc:
-      module PrefixedFilterModule
+      module PrefixedFilterModule # :nodoc:
 
         protected
 

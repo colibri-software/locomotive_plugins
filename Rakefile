@@ -9,3 +9,9 @@ Bundler::GemHelper.install_tasks
 
 require 'bundler_geminabox'
 BundlerGeminabox::GemHelper.install
+
+require 'rdoc/task'
+Rake::RDocTask.new do |rd|
+  rd.rdoc_dir = 'doc'
+  rd.rdoc_files.include('lib/**/*.rb')
+end
