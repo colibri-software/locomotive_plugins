@@ -47,6 +47,7 @@ GEM
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
+    rake (10.0.2)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)
       rspec-expectations (~> 2.11.0)
@@ -71,4 +72,5 @@ DEPENDENCIES
   factory_girl
   locomotive_plugins!
   mocha
+  rake
   rspec (~> 2.3)

@@ -22,6 +22,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'bson_ext'
   s.add_dependency 'mongoid',           '~> 2.4.12'
 
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'rspec'
+
   s.files        = Dir['Rakefile',
     *%w{bin lib man test spec}.collect { |dir| "#{dir}/**/*" },
     *%w{README LICENSE CHANGELOG}.collect { |file| "#{file}*" }
