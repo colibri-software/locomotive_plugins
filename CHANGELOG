@@ -1,3 +1,9 @@
+## 1.0.0
+
+* Added liquid filters
+* Added liquid tags
+* Removed content type scoping (use liquid tags instead)
+
 ## v0.2.1
 
 * Added custom initialization for plugins
@@ -13,24 +19,8 @@
 ## v0.1.0
 
 * Plugins can supply a config UI in HTML or HAML
-
-## v0.0.5
-
-* Fixed issues in gemspec file. Works as installed gem now
-
-## v0.0.4
-
-* Fixed typo
-
-## v0.0.3
-
-* Added RDoc documentation for public API
-
-## v0.0.2
-
 * Added config variable for plugins
-* Added README and CHANGELOG
-
-## v0.0.1
-
-* Initial release
+* Added before_filters for plugins
+* Setup plugin registration
+* Added plugin liquid drops
+* Added content_type_scope
