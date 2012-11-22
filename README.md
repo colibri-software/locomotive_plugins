@@ -1,5 +1,5 @@
 
-# Locomotive Plugins
+# Locomotive Plugins [![Build Status](https://secure.travis-ci.org/colibri-software/locomotive_plugins.png)](https://secure.travis-ci.org/colibri-software/locomotive_plugins.png)
 
 Create plugins for [Locomotive CMS](http://locomotivecms.com/).
 
