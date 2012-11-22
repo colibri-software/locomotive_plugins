@@ -6,7 +6,20 @@ Create plugins for [Locomotive CMS](http://locomotivecms.com/).
 
 ## Installation
 
-TODO
+To create a Locomotive Plugin, create a ruby gem and then install this gem:
+
+
+    gem install locomotive_plugins
+
+Alternatively if you're using Bundler, add the following line to your Gemfile:
+
+    gem 'locomotive_plugins'
+
+and run `bundle install`.
+
+To install the plugin in LocomotiveCMS, simply [create a LocomotiveCMS
+app](http://doc.locomotivecms.com/installation/getting_started) and add your
+plugin gem to the app's Gemfile.
 
 
 ## Usage
@@ -178,7 +191,23 @@ must return a path to an HTML or HAML file. For more fine-grained control over
 how the string is generated, the `config_template_string` can be overridden to
 directly supply the HTML string to be rendered.
 
-## Database Models
+Here's an example of an HTML config file:
+
+    <li>
+      <label name="my_plugin_config">My Plugin Config</label>
+      <input type="text" name="my_plugin_config">
+      <p class="inline-hints">My Hint</p>
+    </li>
+    <li>
+      <label name="content_type_slugs">Content Types</label>
+      <select name="content_type_slugs" multiple="multiple">
+        {{#each content_types}}
+        <option value="{{ this.slug }}"> {{ this.name }}</option>
+        {{/each}}
+      </select>
+    </li>
+
+### Database Models
 
 Plugins can persist data in the database through the use of DBModels. A DBModel
 has all the functionality of a Mongoid document. For example:
@@ -198,7 +227,3 @@ has all the functionality of a Mongoid document. For example:
         visit_count.count += 1
       end
     end
-
-## Development
-
-TODO
