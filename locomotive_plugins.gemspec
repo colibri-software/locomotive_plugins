@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.email               = 'info@colibri-software.com'
   s.homepage            = 'http://www.colibri-software.com'
 
-  s.add_dependency 'locomotive_liquid', '~> 2.2.2'
+  s.add_dependency 'locomotive_liquid', '~> 2.4'
   s.add_dependency 'haml',              '~> 3.1'
 
   s.add_dependency 'bson_ext'
