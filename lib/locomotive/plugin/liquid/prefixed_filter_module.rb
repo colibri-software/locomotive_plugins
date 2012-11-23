@@ -2,10 +2,11 @@
 module Locomotive
   module Plugin
     module Liquid
+      # @private
       # This module provides functionality for the module which aggregates all
       # the prefixed filter methods. See
       # <tt>Locomotive::Plugin::Liquid#prefixed_liquid_filter_module</tt>
-      module PrefixedFilterModule # :nodoc:
+      module PrefixedFilterModule
 
         protected
 

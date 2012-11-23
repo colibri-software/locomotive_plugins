@@ -2,7 +2,8 @@
 module Locomotive
   module Plugin
     module Liquid
-      module TagSubclassMethods # :nodoc:
+      # @private
+      module TagSubclassMethods
         # Check to see if this tag is enabled in the liquid context and render
         # accordingly
         def render(context)
