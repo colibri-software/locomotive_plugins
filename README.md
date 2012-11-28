@@ -39,6 +39,9 @@ different ID, simply supply the ID in the `register_plugin` call:
 
     LocomotivePlugins::register_plugin(BasicAuth, 'auth')
 
+See the sections below for usage examples. Also, see the
+[documentation](http://rubydoc.info/github/colibri-software/locomotive_plugins/).
+
 ### Initialization
 
 To initialize a plugin object, do not override the `initialize` method because
