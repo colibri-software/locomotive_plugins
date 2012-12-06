@@ -46,39 +46,32 @@ module Locomotive
       # Gets the module to include as a filter in liquid. It prefixes the
       # filter methods with the given string
       def prefixed_liquid_filter_module(prefix)
-        # Build up a string to eval into the module so we only need to reopen
-        # it once
-        strings_to_eval = []
-
-        raw_filter_modules = [self.class.liquid_filters].flatten.compact
-        raw_filter_modules.each do |mod|
-          mod.public_instance_methods.each do |meth|
-            strings_to_eval << <<-CODE
-              def #{prefix}_#{meth}(input)
-                self._passthrough_filter_call_for_#{prefix}('#{meth}', input)
-              end
-            CODE
-          end
-        end
-
-        strings_to_eval << <<-CODE
-          protected
-
-          def _passthrough_object_for_#{prefix}
-            @_passthrough_object_for_#{prefix} ||= \
-              self._build_passthrough_object([#{raw_filter_modules.join(',')}])
-          end
-
-          def _passthrough_filter_call_for_#{prefix}(meth, input)
-            self._passthrough_object_for_#{prefix}.public_send(meth, input)
-          end
-        CODE
-
-        # Eval the dynamic methods in
+        # Create the module to be returned
         @prefixed_liquid_filter_module = Module.new do
           include ::Locomotive::Plugin::Liquid::PrefixedFilterModule
         end
-        @prefixed_liquid_filter_module.class_eval strings_to_eval.join("\n")
+
+        # Add the prefixed methods to the module
+        raw_filter_modules = [self.class.liquid_filters].flatten.compact
+        raw_filter_modules.each do |mod|
+          mod.public_instance_methods.each do |meth|
+            @prefixed_liquid_filter_module.module_eval do
+              define_method(:"#{prefix}_#{meth}") do |input|
+                self._passthrough_filter_call(prefix, meth, input)
+              end
+            end
+          end
+        end
+
+        # Add a method which returns the modules to include for this prefix
+        @prefixed_liquid_filter_module.module_eval do
+          protected
+
+          define_method(:"_modules_for_#{prefix}") do
+            raw_filter_modules
+          end
+        end
+
         @prefixed_liquid_filter_module
       end
 

@@ -10,12 +10,40 @@ module Locomotive
 
         protected
 
+        # This method is overridden by LocomotiveCMS to provide custom
+        # functionality when a prefixed method is called
+        def filter_method_called(prefix, meth)
+        end
+
         def _build_passthrough_object(modules_to_extend)
           Object.new.tap do |obj|
             modules_to_extend.each do |mod|
               obj.extend(mod)
             end
           end
+        end
+
+        def _passthrough_object(prefix)
+          @_passthrough_objects ||= {}
+          obj = @_passthrough_objects[prefix]
+
+          # Return it if we have it
+          return obj if obj
+
+          # Otherwise, build it
+          modules_for_prefix_meth = :"_modules_for_#{prefix}"
+          if self.respond_to?(modules_for_prefix_meth)
+            modules = self.send(modules_for_prefix_meth)
+          else
+            modules = []
+          end
+
+          @_passthrough_objects[prefix] = self._build_passthrough_object(modules)
+        end
+
+        def _passthrough_filter_call(prefix, meth, input)
+          self.filter_method_called(prefix, meth)
+          self._passthrough_object(prefix).send(meth, input)
         end
 
       end

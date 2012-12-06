@@ -47,6 +47,15 @@ module Locomotive
           obj.prefix2_remove_http('http://google.com').should == 'google.com'
         end
 
+        it 'should call the filter_method_called hook each time a filter is called' do
+          obj = Object.new
+          obj.expects(:filter_method_called).with('prefix', :add_http).twice
+
+          obj.extend(@plugin_with_filter.prefixed_liquid_filter_module('prefix'))
+          obj.prefix_add_http('google.com').should == 'http://google.com'
+          obj.prefix_add_http('http://google.com').should == 'http://google.com'
+        end
+
       end
 
       describe 'liquid tags' do
