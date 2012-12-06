@@ -202,13 +202,31 @@ Here's an example of an HTML config file:
       <p class="inline-hints">My Hint</p>
     </li>
     <li>
-      <label name="content_type_slugs">Content Types</label>
-      <select name="content_type_slugs" multiple="multiple">
+      <label name="content_type_slug">Content Types</label>
+      <select name="content_type_slug" multiple="multiple">
         {{#each content_types}}
         <option value="{{ this.slug }}"> {{ this.name }}</option>
         {{/each}}
       </select>
     </li>
+    <li>
+      <label name="do_awesome_thing">Do the awesome thing?</label>
+      <input type="checkbox" name="do_awesome_thing">
+    </li>
+
+The values of the input fields in this form will be put into the plugin
+object's config hash. Any input coming from a checkbox field will be saved as a
+boolean value, and other input fields will be saved as strings. The keys for
+the hash are taken from the `name` attribute of each input field. So, if in the
+previous example, the "My Plugin Config" field is filled with "Config Value", a
+content type with slug "my\_content\_type" is selected, and the checkbox is
+checked, the config hash will be as follows:
+
+    {
+      "my_plugin_config" => "Config Value",
+      "content_type_slug" => "my_content_type",
+      "do_awesome_thing" => true
+    }
 
 ### Database Models
 
