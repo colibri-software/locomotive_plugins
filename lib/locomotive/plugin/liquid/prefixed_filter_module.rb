@@ -33,7 +33,7 @@ module Locomotive
           # Otherwise, build it
           modules_for_prefix_meth = :"_modules_for_#{prefix}"
           if self.respond_to?(modules_for_prefix_meth)
-            modules = self.send(modules_for_prefix_meth)
+            modules = self.__send__(modules_for_prefix_meth)
           else
             modules = []
           end
@@ -42,8 +42,17 @@ module Locomotive
         end
 
         def _passthrough_filter_call(prefix, meth, input)
-          self.filter_method_called(prefix, meth)
-          self._passthrough_object(prefix).send(meth, input)
+          p = Proc.new do
+            self._passthrough_object(prefix).send(meth, input)
+          end
+
+          # Call hook and grab return value if it yields
+          ret = nil
+          self.filter_method_called(prefix, meth) do
+            ret = p.call
+          end
+
+          ret || p.call
         end
 
       end

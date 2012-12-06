@@ -7,6 +7,8 @@ module Locomotive
 
       describe '#prefixed_liquid_filter_module' do
 
+        let(:strainer) { ::Liquid::Strainer.new(::Liquid::Context.new) }
+
         before(:each) do
           @plugin_with_filter = PluginWithFilter.new({})
         end
@@ -22,10 +24,9 @@ module Locomotive
         end
 
         it 'the prefixed methods should pass through to the original methods' do
-          obj = Object.new
-          obj.extend(@plugin_with_filter.prefixed_liquid_filter_module('prefix'))
-          obj.prefix_add_http('google.com').should == 'http://google.com'
-          obj.prefix_add_http('http://google.com').should == 'http://google.com'
+          strainer.extend(@plugin_with_filter.prefixed_liquid_filter_module('prefix'))
+          strainer.prefix_add_http('google.com').should == 'http://google.com'
+          strainer.prefix_add_http('http://google.com').should == 'http://google.com'
         end
 
         it 'includes multiple filter modules for one plugin' do
@@ -38,22 +39,36 @@ module Locomotive
         it 'works if multiple prefixed modules are mixed into the same object' do
           @plugin_with_many_filter_modules = PluginWithManyFilterModules.new({})
 
-          obj = Object.new
-          obj.extend(@plugin_with_filter.prefixed_liquid_filter_module('prefix1'))
-          obj.extend(@plugin_with_many_filter_modules.prefixed_liquid_filter_module('prefix2'))
+          strainer.extend(@plugin_with_filter.prefixed_liquid_filter_module('prefix1'))
+          strainer.extend(@plugin_with_many_filter_modules.prefixed_liquid_filter_module('prefix2'))
 
-          obj.prefix1_add_http('google.com').should == 'http://google.com'
-          obj.prefix2_add_newline('google.com').should == "google.com\n"
-          obj.prefix2_remove_http('http://google.com').should == 'google.com'
+          strainer.prefix1_add_http('google.com').should == 'http://google.com'
+          strainer.prefix2_add_newline('google.com').should == "google.com\n"
+          strainer.prefix2_remove_http('http://google.com').should == 'google.com'
         end
 
         it 'should call the filter_method_called hook each time a filter is called' do
-          obj = Object.new
-          obj.expects(:filter_method_called).with('prefix', :add_http).twice
+          # Keep track of how many times filter_method_called is called
+          Locomotive::Plugin::Liquid::PrefixedFilterModule.module_eval do
+            attr_accessor :count, :prefix, :method
 
-          obj.extend(@plugin_with_filter.prefixed_liquid_filter_module('prefix'))
-          obj.prefix_add_http('google.com').should == 'http://google.com'
-          obj.prefix_add_http('http://google.com').should == 'http://google.com'
+            def filter_method_called(prefix, meth)
+              @count ||= 0
+              @count += 1
+              @prefix = prefix
+              @method = meth
+            end
+          end
+
+          # Call filter methods
+          strainer.extend(@plugin_with_filter.prefixed_liquid_filter_module('prefix'))
+          strainer.prefix_add_http('google.com').should == 'http://google.com'
+          strainer.prefix_add_http('http://google.com').should == 'http://google.com'
+
+          # Make sure filter_method_called was called as expected
+          strainer.count.should == 2
+          strainer.prefix.should == 'prefix'
+          strainer.method.should == :add_http
         end
 
       end
