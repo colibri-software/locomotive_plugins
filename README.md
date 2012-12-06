@@ -79,6 +79,12 @@ the Locomotive UI.
 
 ### Liquid
 
+Plugins have the ability to add liquid drops, tags, and filters to
+LocomotiveCMS. These liquid objects will only be accessible to sites which have
+enabled the plugin. All liquid objects have access to
+`@context.registers[:plugin_object]` which supplies the plugin object. This
+gives access to the config hash and other plugin methods.
+
 #### Drops
 
 A plugin can add a liquid drop which can be accessed from page templates in
