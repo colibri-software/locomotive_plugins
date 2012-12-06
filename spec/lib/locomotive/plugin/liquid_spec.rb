@@ -50,7 +50,7 @@ module Locomotive
         it 'should call the filter_method_called hook each time a filter is called' do
           # Keep track of how many times filter_method_called is called
           Locomotive::Plugin::Liquid::PrefixedFilterModule.module_eval do
-            attr_accessor :count, :prefix, :method
+            attr_reader :count, :prefix, :method
 
             def filter_method_called(prefix, meth)
               @count ||= 0
@@ -69,6 +69,23 @@ module Locomotive
           strainer.count.should == 2
           strainer.prefix.should == 'prefix'
           strainer.method.should == :add_http
+        end
+
+        it 'should give the current liquid context object to the passthrough objects' do
+          Locomotive::Plugin::Liquid::PrefixedFilterModule.module_eval do
+            attr_reader :context
+            def passthrough_objects ; @_passthrough_objects ; end
+          end
+
+          # Extend the module and create the passthrough object
+          strainer.extend(@plugin_with_filter.prefixed_liquid_filter_module('prefix'))
+          strainer.prefix_add_http('google.com').should == 'http://google.com'
+
+          # Find the context of the passthrough object
+          obj = strainer.passthrough_objects['prefix']
+          def obj.context ; @context ; end
+
+          obj.context.should == strainer.context
         end
 
       end

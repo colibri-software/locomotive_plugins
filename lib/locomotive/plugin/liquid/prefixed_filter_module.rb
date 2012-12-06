@@ -16,11 +16,13 @@ module Locomotive
         end
 
         def _build_passthrough_object(modules_to_extend)
-          Object.new.tap do |obj|
-            modules_to_extend.each do |mod|
-              obj.extend(mod)
-            end
+          obj = ::Liquid::Strainer.new(@context)
+
+          modules_to_extend.each do |mod|
+            obj.extend(mod)
           end
+
+          obj
         end
 
         def _passthrough_object(prefix)
@@ -43,7 +45,7 @@ module Locomotive
 
         def _passthrough_filter_call(prefix, meth, input)
           p = Proc.new do
-            self._passthrough_object(prefix).send(meth, input)
+            self._passthrough_object(prefix).__send__(meth, input)
           end
 
           # Call hook and grab return value if it yields
