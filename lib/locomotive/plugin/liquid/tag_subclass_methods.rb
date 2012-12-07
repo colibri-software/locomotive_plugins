@@ -4,18 +4,37 @@ module Locomotive
     module Liquid
       # @private
       module TagSubclassMethods
+
         # Check to see if this tag is enabled in the liquid context and render
         # accordingly
         def render(context)
-          enabled = context.registers[:enabled_plugin_tags]
-          if enabled && enabled.include?(self.class)
-            super
-          elsif self.respond_to?(:render_disabled)
-            self.render_disabled(context)
-          else
-            ''
+          enabled_tags = context.registers[:enabled_plugin_tags]
+          enabled = enabled_tags && enabled_tags.include?(self.class)
+
+          p = Proc.new do
+            if enabled
+              super
+            elsif self.respond_to?(:render_disabled)
+              self.render_disabled(context)
+            else
+              ''
+            end
           end
+
+          ret = nil
+          rendering_tag(enabled, context) do
+            ret = p.call
+          end
+          ret || p.call
         end
+
+        protected
+
+        # This method is overridden by LocomotiveCMS to provide custom
+        # functionality when the tag is rendering
+        def rendering_tag(enabled, context)
+        end
+
       end
     end
   end

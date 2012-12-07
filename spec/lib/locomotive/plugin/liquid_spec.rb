@@ -57,6 +57,7 @@ module Locomotive
               @count += 1
               @prefix = prefix
               @method = meth
+              yield
             end
           end
 
@@ -149,6 +150,36 @@ module Locomotive
           register_tags(@prefixed_tags)
           template = ::Liquid::Template.parse(@raw_template)
           template.render(@context).should == expected_output
+        end
+
+        it 'should call the rendering_tag hook each time a tag is rendered' do
+          TagSubclassMethods.module_eval do
+            def rendering_tag(enabled, context)
+              context.registers[:rendering_tag][self.class] = {
+                enabled: enabled
+              }
+              yield
+            end
+          end
+
+          expected_output = <<-TEMPLATE
+            <p>Some Text</p>
+            Some Text
+          TEMPLATE
+
+          @context.registers[:rendering_tag] = {}
+
+          register_tags(@prefixed_tags)
+          @enabled_tags << @prefixed_tags['prefix_paragraph']
+          template = ::Liquid::Template.parse(@raw_template)
+          template.render(@context).should == expected_output
+
+          paragraph_class = ::Locomotive::PluginWithTags::Paragraph::TagSubclass
+          newline_class = ::Locomotive::PluginWithTags::Newline::TagSubclass
+
+          hash = @context.registers[:rendering_tag]
+          hash[paragraph_class].should == { enabled: true }
+          hash[newline_class].should == { enabled: false }
         end
 
         protected
