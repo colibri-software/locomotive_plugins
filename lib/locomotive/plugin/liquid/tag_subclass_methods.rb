@@ -22,7 +22,7 @@ module Locomotive
           end
 
           ret = nil
-          rendering_tag(enabled, context) do
+          rendering_tag(self.class.prefix, enabled, context) do
             ret = p.call
           end
           ret || p.call
@@ -32,7 +32,7 @@ module Locomotive
 
         # This method is overridden by LocomotiveCMS to provide custom
         # functionality when the tag is rendering
-        def rendering_tag(enabled, context)
+        def rendering_tag(prefix, enabled, context)
         end
 
       end

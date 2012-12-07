@@ -24,7 +24,7 @@ module Locomotive
         # normally
         def prefixed_liquid_tags(prefix)
           self.liquid_tags.inject({}) do |hash, (tag_name, tag_class)|
-            hash["#{prefix}_#{tag_name}"] = tag_subclass(tag_class)
+            hash["#{prefix}_#{tag_name}"] = tag_subclass(prefix, tag_class)
             hash
           end
         end
@@ -32,10 +32,14 @@ module Locomotive
         protected
 
         # Creates a nested subclass to handle rendering this tag
-        def tag_subclass(tag_class)
+        def tag_subclass(prefix, tag_class)
           tag_class.class_eval <<-CODE
             class TagSubclass < #{tag_class.to_s}
               include ::Locomotive::Plugin::TagSubclassMethods
+
+              def self.prefix
+                '#{prefix}'
+              end
             end
           CODE
           tag_class::TagSubclass

@@ -154,8 +154,9 @@ module Locomotive
 
         it 'should call the rendering_tag hook each time a tag is rendered' do
           TagSubclassMethods.module_eval do
-            def rendering_tag(enabled, context)
+            def rendering_tag(prefix, enabled, context)
               context.registers[:rendering_tag][self.class] = {
+                prefix: prefix,
                 enabled: enabled
               }
               yield
@@ -178,8 +179,8 @@ module Locomotive
           newline_class = ::Locomotive::PluginWithTags::Newline::TagSubclass
 
           hash = @context.registers[:rendering_tag]
-          hash[paragraph_class].should == { enabled: true }
-          hash[newline_class].should == { enabled: false }
+          hash[paragraph_class].should == { prefix: 'prefix', enabled: true }
+          hash[newline_class].should == { prefix: 'prefix', enabled: false }
         end
 
         protected
