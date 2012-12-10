@@ -120,8 +120,6 @@ module Locomotive
     # objects. Instead, override the initialize_plugin method
     def initialize(config)
       self.config = config
-      self.load_or_create_db_model_container!
-      self.save_db_model_container
       self.initialize_plugin
     end
 

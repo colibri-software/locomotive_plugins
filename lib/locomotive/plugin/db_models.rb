@@ -33,18 +33,21 @@ module Locomotive
         protected
 
         def create_has_many_relationship(name, klass)
-          self.db_model_container_class.embeds_many(name,
-            class_name: klass.to_s, inverse_of: :db_model_container)
-          klass.embedded_in(:db_model_container,
+          self.db_model_container_class.has_many(name,
+            class_name: klass.to_s, inverse_of: :db_model_container,
+            autosave: true, dependent: :destroy)
+          klass.belongs_to(:db_model_container,
             class_name: db_model_container_class.to_s, inverse_of: name)
 
-          self.define_passthrough_methods_to_container(name, "#{name}=")
+          self.define_passthrough_methods_to_container(name, "#{name}=",
+            "#{name}_ids", "#{name}_ids=")
         end
 
         def create_has_one_relationship(name, klass)
-          self.db_model_container_class.embeds_one(name,
-            class_name: klass.to_s, inverse_of: :db_model_container)
-          klass.embedded_in(:db_model_container,
+          self.db_model_container_class.has_one(name,
+            class_name: klass.to_s, inverse_of: :db_model_container,
+            autosave: true, dependent: :destroy)
+          klass.belongs_to(:db_model_container,
             class_name: db_model_container_class.to_s, inverse_of: name)
 
           self.define_passthrough_methods_to_container(name, "#{name}=",
@@ -52,13 +55,13 @@ module Locomotive
         end
 
         def define_passthrough_methods_to_container(*methods)
-          class_eval <<-EOF
-            %w{#{methods.join(' ')}}.each do |meth|
+          class_eval do
+            methods.each do |meth|
               define_method(meth) do |*args|
-                @db_model_container.send(meth, *args)
+                db_model_container.send(meth, *args)
               end
             end
-          EOF
+          end
         end
 
       end
@@ -70,14 +73,36 @@ module Locomotive
 
       # Get the DB Model container
       def db_model_container
-        @db_model_container || load_or_create_db_model_container!
+        @db_model_containers ||= {}
+        name = self.current_db_model_container_name
+        @db_model_containers[name] ||= load_db_model_container(name)
       end
+
+      # Set the current DB Model container
+      def use_db_model_container(name)
+        @current_db_model_container_name = name
+      end
+
+      # Reset to the default DB Model container
+      def reset_current_db_model_container
+        self.use_db_model_container(nil)
+      end
+
+      # Set the current DB Model container for the duration of the block
+      def with_db_model_container(name, &block)
+        old_name = self.current_db_model_container_name
+        self.use_db_model_container(name)
+        block.call
+        self.use_db_model_container(old_name)
+      end
+
+      # The name of the current container being used
+      attr_reader :current_db_model_container_name
 
       protected
 
-      def load_or_create_db_model_container!
-        @db_model_container = self.class.db_model_container_class.first \
-          || self.class.db_model_container_class.new
+      def load_db_model_container(name)
+        self.class.db_model_container_class.for_name(name)
       end
 
     end
