@@ -51,6 +51,43 @@ module Locomotive
         }
       end
 
+      it 'should allow relationships between DBModels' do
+        plugin = PluginWithDBModelRelationships.new({})
+
+        t1 = plugin.teachers.build(name: 'Mr. Adams')
+        t2 = plugin.teachers.build(name: 'Ms. Boudreau')
+
+        s1 = plugin.students.build(name: 'Alex', teacher: t1)
+        s2 = plugin.students.build(name: 'Billy', teacher: t1)
+        s3 = plugin.students.build(name: 'Caitlyn', teacher: t2)
+
+        plugin.save_db_model_container.should be_true
+
+        # Reload from database
+        plugin = PluginWithDBModelRelationships.new({})
+
+        # Check all the names and relationships to make sure they were
+        # persisted
+        teachers = plugin.teachers.to_a
+        students = plugin.students.to_a
+
+        teachers[0].name.should == 'Mr. Adams'
+        teachers[0].students.count.should == 2
+        teachers[0].students.should include(s1)
+        teachers[0].students.should include(s2)
+
+        teachers[1].name.should == 'Ms. Boudreau'
+        teachers[1].students.count.should == 1
+        teachers[1].students.should include(s3)
+
+        s1.name.should == 'Alex'
+        s1.teacher.should == t1
+        s2.name.should == 'Billy'
+        s2.teacher.should == t1
+        s3.name.should == 'Caitlyn'
+        s3.teacher.should == t2
+      end
+
     end
   end
 end
