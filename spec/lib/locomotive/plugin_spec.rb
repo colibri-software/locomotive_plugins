@@ -14,6 +14,13 @@ module Locomotive
       @plugin.custom_attribute.should == 'Value'
     end
 
+    it 'should call the gven block before custom initialization methods' do
+      @plugin = MyPlugin.new(@config) do |obj|
+        obj.custom_attribute.should be_nil
+      end
+      @plugin.custom_attribute.should_not be_nil
+    end
+
     it 'should store a list of before_filters' do
       @plugin.before_filters.count.should == 2
       @plugin.before_filters[0].should == :my_method1
