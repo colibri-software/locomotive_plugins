@@ -3,6 +3,8 @@
 * Added liquid filters
 * Added liquid tags
 * Removed content type scoping (use liquid tags instead)
+* Fixed DBModel relationships
+* Added names for DBModel containers
 
 ## v0.2.1
 
