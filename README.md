@@ -1,7 +1,9 @@
 
 # Locomotive Plugins [![Build Status](https://secure.travis-ci.org/colibri-software/locomotive_plugins.png)](https://secure.travis-ci.org/colibri-software/locomotive_plugins.png)
 
-Create plugins for [Locomotive CMS](http://locomotivecms.com/).
+This gem is used to develop plugins for [Locomotive
+CMS](http://locomotivecms.com/). Plugins can be enabled or disabled on each
+site individually.
 
 
 ## Installation
