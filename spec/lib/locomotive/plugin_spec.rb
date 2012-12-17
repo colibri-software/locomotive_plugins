@@ -14,7 +14,7 @@ module Locomotive
       @plugin.custom_attribute.should == 'Value'
     end
 
-    it 'should call the gven block before custom initialization methods' do
+    it 'should call the given block before custom initialization methods' do
       @plugin = MyPlugin.new(@config) do |obj|
         obj.custom_attribute.should be_nil
       end
