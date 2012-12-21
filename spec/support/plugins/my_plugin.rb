@@ -16,7 +16,8 @@ module Locomotive
     end
 
     before_filter :my_method1
-    before_filter :my_method2
+    after_filter :my_method2
+    around_filter :my_method3
 
     attr_accessor :custom_attribute
 
@@ -42,11 +43,15 @@ module Locomotive
     end
 
     def my_method1
-      'This is my first before filter!'
+      'This is my before filter!'
     end
 
     def my_method2
-      'This is my second before filter!'
+      'This is my after filter!'
+    end
+
+    def my_method3
+      'This is my around filter!'
     end
   end
 end
