@@ -34,6 +34,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     Mongoid::IdentityMap.clear
+    LocomotivePlugins.clear_registered_plugins!
   end
 
   config.before(:each) do

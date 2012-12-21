@@ -37,7 +37,7 @@ module LocomotivePlugins
   end
 
   # Remove all plugins from the registered list
-  def self.clear_registered_plugins
+  def self.clear_registered_plugins!
     @@registered_plugins = {}
   end
 

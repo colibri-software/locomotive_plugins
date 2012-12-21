@@ -3,10 +3,6 @@ require 'spec_helper'
 
 describe LocomotivePlugins do
 
-  before(:each) do
-    LocomotivePlugins.clear_registered_plugins
-  end
-
   it 'should register plugins under a given id' do
     LocomotivePlugins.register_plugin(Locomotive::MyPlugin, 'my_amazing_plugin')
     registered = LocomotivePlugins.registered_plugins
