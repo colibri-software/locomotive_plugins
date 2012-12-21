@@ -10,11 +10,6 @@ module Locomotive
 
         protected
 
-        # This method is overridden by LocomotiveCMS to provide custom
-        # functionality when a prefixed method is called
-        def filter_method_called(prefix, meth)
-        end
-
         def _build_passthrough_object(modules_to_extend)
           obj = ::Liquid::Strainer.new(@context)
 
@@ -44,17 +39,14 @@ module Locomotive
         end
 
         def _passthrough_filter_call(prefix, meth, input)
-          p = Proc.new do
-            self._passthrough_object(prefix).__send__(meth, input)
+          # Setup context object and call the passthrough
+          output = nil
+
+          ContextHelpers.add_plugin_object_to_context(prefix, @context) do
+            output = self._passthrough_object(prefix).__send__(meth, input)
           end
 
-          # Call hook and grab return value if it yields
-          ret = nil
-          self.filter_method_called(prefix, meth) do
-            ret = p.call
-          end
-
-          ret || p.call
+          output
         end
 
       end

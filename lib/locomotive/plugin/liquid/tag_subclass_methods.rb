@@ -11,8 +11,10 @@ module Locomotive
           enabled_tags = context.registers[:enabled_plugin_tags]
           enabled = enabled_tags && enabled_tags.include?(self.class)
 
-          p = Proc.new do
-            if enabled
+          output = nil
+
+          ContextHelpers.add_plugin_object_to_context(self.prefix, context) do
+            output = if enabled
               super
             elsif self.respond_to?(:render_disabled)
               self.render_disabled(context)
@@ -21,11 +23,11 @@ module Locomotive
             end
           end
 
-          ret = nil
-          rendering_tag(self.class.prefix, enabled, context) do
-            ret = p.call
-          end
-          ret || p.call
+          output
+        end
+
+        def prefix
+          self.class.prefix
         end
 
         protected

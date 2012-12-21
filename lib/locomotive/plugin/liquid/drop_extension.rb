@@ -11,12 +11,13 @@ module Locomotive
 
         # Set the context when the drop is invoked
         def invoke_drop(method)
-          ret = nil
-          helper = ::Locomotive::Plugin::Liquid::ContextHelpers
-          helper.add_plugin_object_to_context(self._plugin_id, @context) do
-            ret = super
+          value = nil
+
+          ContextHelpers.add_plugin_object_to_context(self._plugin_id, @context) do
+            value = super
           end
-          ret
+
+          value
         end
         alias :[] :invoke_drop
 
