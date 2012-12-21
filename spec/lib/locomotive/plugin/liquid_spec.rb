@@ -52,26 +52,20 @@ module Locomotive
           ::Liquid::Template.parse('{% my_plugin_my_tag %}').render(@context)
         end
 
-        # TODO these specs need to be fixed!
-
-=begin
-
         context 'add_plugin_object_to_context' do
 
-          # TODO: make sure stack works
-          # TODO: make sure no site works
-          # TODO: test liquid tag loader
-
           before(:each) do
-            @helper = Locomotive::Plugins::LiquidContextHelpers
+            plugin = @plugin
+            @context.registers[:site] = stub do
+              stubs(:plugin_object_for_id).with('my_plugin').returns(plugin)
+            end
           end
 
           it 'should add the object to the context' do
             did_yield = false
-            @helper.send(:add_plugin_object_to_context,
-                'mobile_detection_plugin', @context) do
+            ContextHelpers.add_plugin_object_to_context('my_plugin', @context) do
               did_yield = true
-              @context.registers[:plugin_object].class.should == MobileDetectionPlugin
+              @context.registers[:plugin_object].should == @plugin
             end
             did_yield.should be_true
             @context.registers[:plugin_object].should be_nil
@@ -82,18 +76,41 @@ module Locomotive
             @context.registers[:plugin_object] = initial_object
 
             did_yield = false
-            @helper.send(:add_plugin_object_to_context,
-                'mobile_detection_plugin', @context) do
+            ContextHelpers.add_plugin_object_to_context('my_plugin', @context) do
               did_yield = true
-              @context.registers[:plugin_object].class.should == MobileDetectionPlugin
+              @context.registers[:plugin_object].should == @plugin
             end
             did_yield.should be_true
             @context.registers[:plugin_object].should == initial_object
           end
 
+          it 'should do nothing if there is no site object in the context' do
+            @context.registers[:site] = nil
+
+            did_yield = false
+            ContextHelpers.add_plugin_object_to_context('my_plugin', @context) do
+              did_yield = true
+              @context.registers[:plugin_object].should be_nil
+            end
+            did_yield.should be_true
+            @context.registers[:plugin_object].should be_nil
+          end
+
+          it 'should do nothing if the site object has no plugin_object_for method' do
+            @context.registers[:site] = Object.new
+
+            did_yield = false
+            ContextHelpers.add_plugin_object_to_context('my_plugin', @context) do
+              did_yield = true
+              @context.registers[:plugin_object].should be_nil
+            end
+            did_yield.should be_true
+            @context.registers[:plugin_object].should be_nil
+          end
+
         end
 
-=end
+        # TODO: test liquid tag loader
 
       end
 

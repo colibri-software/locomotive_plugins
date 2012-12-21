@@ -14,11 +14,11 @@ module Locomotive
         def self.add_plugin_object_to_context(plugin_id, context)
           site = self.fetch_site(context)
           if site
-            context.stack do
-              obj = site.plugin_object_for_id(plugin_id)
-              context.registers[:plugin_object] = obj
-              yield
-            end
+            old = context.registers[:plugin_object]
+            obj = site.plugin_object_for_id(plugin_id)
+            context.registers[:plugin_object] = obj
+            yield
+            context.registers[:plugin_object] = old
           else
             yield
           end
