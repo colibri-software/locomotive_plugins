@@ -5,6 +5,108 @@ module Locomotive
   module Plugin
     describe Liquid do
 
+      context '#setup_liquid_context' do
+
+        before(:each) do
+          @config = {}
+          @plugin = MyPlugin.new(@config)
+          @context = ::Liquid::Context.new({}, {}, {site: @site}, true)
+          @plugin.setup_liquid_context('my_plugin', @context)
+        end
+
+        it 'should add a container for the plugin liquid drops' do
+          @context['plugins.my_plugin'].class.should == MyPlugin::MyDrop
+        end
+
+        it 'should add a set of enabled liquid tags' do
+          @context.registers[:enabled_plugin_tags].class.should == Set
+          @context.registers[:enabled_plugin_tags].size.should == 1
+          @context.registers[:enabled_plugin_tags].should include(MyPlugin::MyTag::TagSubclass)
+        end
+
+        it 'should add liquid filters' do
+          @context.strainer.my_plugin_filter('input').should == 'input'
+          expect { @context.strainer.language_plugin_filter('input') }.to raise_error
+        end
+
+        it 'should add the plugin object to the context when invoking drops' do
+          helper = Locomotive::Plugin::Liquid::ContextHelpers
+          helper.expects(:add_plugin_object_to_context).with('my_plugin', @context)
+          @context['plugins.my_plugin.dummy_method']
+        end
+
+        # TODO these specs need to be fixed!
+
+=begin
+
+        it 'should add the plugin object to the context when calling filters' do
+          obj = Object.new
+          obj.extend(Locomotive::Plugin::Liquid::PrefixedFilterModule)
+          class << obj
+            attr_accessor :context
+          end
+          obj.context = @context
+
+          helper = Locomotive::Plugins::LiquidContextHelpers
+          helper.expects(:add_plugin_object_to_context).with(
+            'mobile_detection_plugin', @context)
+
+          obj.send(:filter_method_called, 'mobile_detection_plugin', 'method') do
+          end
+        end
+
+        it 'should add the plugin object to the context when rendering tags' do
+          obj = Object.new
+          obj.extend(Locomotive::Plugin::Liquid::TagSubclassMethods)
+
+          helper = Locomotive::Plugins::LiquidContextHelpers
+          helper.expects(:add_plugin_object_to_context).with(
+            'mobile_detection_plugin', @context)
+
+          obj.send(:rendering_tag, 'mobile_detection_plugin', true, @context) do
+          end
+        end
+
+        context 'add_plugin_object_to_context' do
+
+          # TODO: make sure stack works
+          # TODO: make sure no site works
+
+          before(:each) do
+            @helper = Locomotive::Plugins::LiquidContextHelpers
+          end
+
+          it 'should add the object to the context' do
+            did_yield = false
+            @helper.send(:add_plugin_object_to_context,
+                'mobile_detection_plugin', @context) do
+              did_yield = true
+              @context.registers[:plugin_object].class.should == MobileDetectionPlugin
+            end
+            did_yield.should be_true
+            @context.registers[:plugin_object].should be_nil
+          end
+
+          it 'should reset the context object' do
+            initial_object = 'initial'
+            @context.registers[:plugin_object] = initial_object
+
+            did_yield = false
+            @helper.send(:add_plugin_object_to_context,
+                'mobile_detection_plugin', @context) do
+              did_yield = true
+              @context.registers[:plugin_object].class.should == MobileDetectionPlugin
+            end
+            did_yield.should be_true
+            @context.registers[:plugin_object].should == initial_object
+          end
+
+        end
+
+=end
+
+      end
+
       describe '#prefixed_liquid_filter_module' do
 
         let(:strainer) { ::Liquid::Strainer.new(::Liquid::Context.new) }

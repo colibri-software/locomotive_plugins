@@ -79,6 +79,23 @@ module Locomotive
         @prefixed_liquid_filter_module
       end
 
+      # Setup the liquid context object for rendering
+      def setup_liquid_context(plugin_id, context)
+        # Add tags
+        (context.registers[:enabled_plugin_tags] ||= Set.new).tap do |set|
+          set.merge(self.class.prefixed_liquid_tags(plugin_id).values)
+        end
+
+        # Add drop with extension
+        drop = self.to_liquid
+        drop.extend(Locomotive::Plugin::Liquid::DropExtension)
+        drop.set_plugin_id(plugin_id)
+        (context['plugins'] ||= {})[plugin_id] = drop
+
+        # Add filters
+        context.add_filters(self.prefixed_liquid_filter_module(plugin_id))
+      end
+
     end
   end
 end

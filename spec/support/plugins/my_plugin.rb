@@ -4,9 +4,15 @@ module Locomotive
     include Locomotive::Plugin
 
     module Filters
+      def filter(input)
+        input
+      end
     end
 
     class MyDrop < ::Liquid::Drop
+    end
+
+    class MyTag < ::Liquid::Tag
     end
 
     before_filter :my_method1
@@ -29,6 +35,10 @@ module Locomotive
 
     def self.liquid_filters
       Filters
+    end
+
+    def self.liquid_tags
+      { 'my_tag' => MyTag }
     end
 
     def my_method1
