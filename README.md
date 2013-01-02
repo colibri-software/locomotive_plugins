@@ -238,21 +238,35 @@ checked, the config hash will be as follows:
 
 ### Database Models
 
-Plugins can persist data in the database through the use of DBModels. A DBModel
-has all the functionality of a Mongoid document. For example:
+Plugins can persist data in Locomotive's database through the use of Database
+Models. A Database Model is simply a Mongoid document which is managed by
+Locomotive CMS. For example:
 
-    class VisitCount < Locomotive::Plugin::DBModel
+    class VisitCount
+      include Mongoid::Document
       field :count, default: 0
     end
 
     class VisitCounter
       include Locomotive::Plugin
 
-      has_one :visit_count, VisitCount
       before_filter :increment_count
 
       def increment_count
-        build_visit_count unless visit_count
         visit_count.count += 1
+        visit_count.save!
+      end
+
+      protected
+
+      def visit_count
+        @visit_count ||= (VisitCount.first || VisitCount.new)
       end
     end
+
+Note that the plugin databases are isolated between Locomotive site instances.
+In other words, if a plugin is enabled on two sites, A and B, and a request
+comes in to site A which causes a Mongoid Document to be saved to the database,
+this document will not be accessible to the plugin when a request comes in to
+site B. Thus plugin database models should be developed in the context of a
+single site, since each site will have its own database.
