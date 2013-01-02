@@ -12,13 +12,11 @@ module Locomotive
 
     include ClassTracker
     include ConfigUI
-    include DBModels
     include Liquid
 
     # @private
     def self.included(base)
       self.track_plugin_class(base)
-      self.add_db_model_class_methods(base)
       self.add_liquid_tag_methods(base)
 
       base.class_eval do
