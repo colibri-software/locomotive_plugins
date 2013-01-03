@@ -10,7 +10,6 @@ site individually.
 
 To create a Locomotive Plugin, create a ruby gem and then install this gem:
 
-
     gem install locomotive_plugins
 
 Alternatively if you're using Bundler, add the following line to your Gemfile:
@@ -23,23 +22,36 @@ To install the plugin in LocomotiveCMS, simply [create a LocomotiveCMS
 app](http://doc.locomotivecms.com/installation/getting_started) and add your
 plugin gem to the app's Gemfile.
 
+### Configuration
+
+After installing the locomotive\_plugins gem, run `rails generate
+locomotive_plugins:config` to generate the configuration file. See the
+generated file for a discussion of the various configuration options.
+
 
 ## Usage
 
 To create a plugin, create a class which includes the `Locomotive::Plugin`
-module and register it as a plugin:
+module:
 
     class BasicAuth
       include Locomotive::Plugin
     end
 
-    LocomotivePlugins.register_plugin(BasicAuth)
+The plugin class will automatically be registered under an ID which is its
+underscored name, in this case, `basic_auth`. To register it under a different
+ID, simply override the class level method `default_plugin_id`:
 
-The plugin will automatically be registered under an ID which is its
-underscored name, in this case, `basic_auth`. To register it under a
-different ID, simply supply the ID in the `register_plugin` call:
+    class BasicAuth
+      include Locomotive::Plugin
 
-    LocomotivePlugins::register_plugin(BasicAuth, 'auth')
+      def self.default_plugin_id
+        'auth'
+      end
+    end
+
+Note that this ID may be overridden when including the plugin in a Locomotive
+CMS app. See the configuration options for details.
 
 See the sections below for usage examples. Also, see the
 [documentation](http://rubydoc.info/github/colibri-software/locomotive_plugins/).

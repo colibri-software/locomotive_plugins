@@ -28,6 +28,13 @@ module Locomotive
     end
 
     module ClassMethods
+      # Override this method to specify the default plugin_id to use when
+      # Locomotive registers the plugin. This plugin_id may be overridden by
+      # Locomotive CMS.
+      def default_plugin_id
+        to_s.split('::').last.underscore
+      end
+
       # Override this method to provide a module or array of modules to include
       # as liquid filters in the site. All public methods in the module will be
       # included as filters after being prefixed with the plugin id
