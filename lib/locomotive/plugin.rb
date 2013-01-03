@@ -81,11 +81,6 @@ module Locomotive
     def initialize_plugin
     end
 
-    # Get all before filters which have been added to the controller
-    def before_filters
-      self.class.before_filters
-    end
-
     # Override this method to provide a liquid drop which should be available
     # in the CMS
     def to_liquid
