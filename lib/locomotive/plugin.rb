@@ -28,24 +28,6 @@ module Locomotive
     end
 
     module ClassMethods
-      # Add a before filter to be called by the underlying controller
-      #
-      # @param meth[Symbol] the method to call
-      #
-      # @example
-      #   before_filter :my_method
-      def before_filter(meth)
-        @before_filters ||= []
-        @before_filters << meth
-      end
-
-      # Get list of before filters
-      #
-      # @return [Array<Symbol>] an array of the method symbols
-      def before_filters
-        @before_filters ||= []
-      end
-
       # Override this method to provide a module or array of modules to include
       # as liquid filters in the site. All public methods in the module will be
       # included as filters after being prefixed with the plugin id
