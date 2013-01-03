@@ -16,7 +16,6 @@ module Locomotive
 
     # @private
     def self.included(base)
-      self.track_plugin_class(base)
       self.add_liquid_tag_methods(base)
 
       base.class_eval do
@@ -25,6 +24,8 @@ module Locomotive
       end
 
       base.extend ClassMethods
+
+      self.track_plugin_class(base)
     end
 
     module ClassMethods
