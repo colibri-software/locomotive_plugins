@@ -8,7 +8,6 @@ module Locomotive
       context '#setup_liquid_context' do
 
         before(:each) do
-          LocomotivePlugins.register_plugin(MyPlugin)
           @config = {}
           @plugin = MyPlugin.new(@config)
           @context = ::Liquid::Context.new({}, {}, {}, true)
@@ -45,7 +44,7 @@ module Locomotive
         end
 
         it 'should add the plugin object to the context when rendering tags' do
-          TagLoader.load!
+          TagLoader.load!({ my_plugin: MyPlugin })
           ContextHelpers.expects(:add_plugin_object_to_context).with(
             'my_plugin', @context)
           ::Liquid::Template.parse('{% my_plugin_my_tag %}').render(@context)
