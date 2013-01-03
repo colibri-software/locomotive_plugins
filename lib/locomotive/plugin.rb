@@ -58,41 +58,6 @@ module Locomotive
       def liquid_tags
         {}
       end
-
-      # Create a +has_many+ mongoid relationship to objects of the given class.
-      # The given class should be derived from Locomotive::Plugin::DBModel.
-      # This will add the following methods to the plugin object:
-      #
-      # [#\\{name}]   Returns a list of persisted objects
-      #
-      # [#\\{name}=]  Setter for the list of persisted objects
-      #
-      # @param name[String] the name of the relationship
-      #
-      # @param klass[Class] the class of the objects to be stored
-      def has_many(name, klass)
-        self.create_has_many_relationship(name, klass)
-      end
-
-      # Create a +has_one+ mongoid relationship to an object of the given
-      # class.  The given class should be derived from
-      # Locomotive::Plugin::DBModel. This will add the following methods to the
-      # plugin object:
-      #
-      # [#\\{name}]         Returns the related object
-      #
-      # [#\\{name}=]        Setter for the related object
-      #
-      # [build_#\\{name}]   Builds the related object
-      #
-      # [create_#\\{name}]  Builds and saves the related object
-      #
-      # @param name[String] the name of the relationship
-      #
-      # @param klass[Class] the class of the object to be stored
-      def has_one(name, klass)
-        self.create_has_one_relationship(name, klass)
-      end
     end
 
     # This variable is set by LocomotiveCMS. It contains the controller which
