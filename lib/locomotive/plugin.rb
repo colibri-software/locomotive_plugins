@@ -70,14 +70,9 @@ module Locomotive
 
     # Initialize by supplying the current config parameters. Note that this
     # method should not be overridden for custom initialization of plugin
-    # objects. Instead, override the initialize_plugin method. If given a
-    # block, the block will be called with `self` as an argument before the
-    # `initialize_plugin` method is called. This is used by LocomotiveCMS to
-    # perform some custom initialization before the plugin's initialization is
-    # called.
+    # objects. Instead, override the initialize_plugin method.
     def initialize(config)
       self.config = config
-      yield self if block_given?
       self.initialize_plugin
     end
 
