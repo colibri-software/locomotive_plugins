@@ -29,6 +29,13 @@ module Locomotive
           end
         end
 
+        # Registers the prefixed liquid tags in the liquid template system
+        def register_tags(prefix)
+          prefixed_liquid_tags(prefix).each do |tag_name, tag_class|
+            ::Liquid::Template.register_tag(tag_name, tag_class)
+          end
+        end
+
         protected
 
         # Creates a nested subclass to handle rendering this tag

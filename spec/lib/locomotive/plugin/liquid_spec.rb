@@ -44,13 +44,11 @@ module Locomotive
         end
 
         it 'should add the plugin object to the context when rendering tags' do
-          TagLoader.load!({ my_plugin: MyPlugin })
+          MyPlugin.register_tags('my_plugin')
           ContextHelpers.expects(:add_plugin_object_to_context).with(
             'my_plugin', @context)
           ::Liquid::Template.parse('{% my_plugin_my_tag %}').render(@context)
         end
-
-        # TODO: test liquid tag loader
 
       end
 
@@ -121,6 +119,11 @@ module Locomotive
           @plugin_class = PluginWithTags
           @prefixed_tags = @plugin_class.prefixed_liquid_tags('prefix')
 
+          # Clear out existing registered liquid tags and register the ones we
+          # want
+          ::Liquid::Template.instance_variable_set(:@tags, nil)
+          PluginWithTags.register_tags('prefix')
+
           @enabled_tags = []
           @context = ::Liquid::Context.new
           @context.registers[:enabled_plugin_tags] = @enabled_tags
@@ -137,13 +140,20 @@ module Locomotive
           @prefixed_tags['prefix_newline'].should be < PluginWithTags::Newline
         end
 
+        it 'should register all prefixed tags in liquid' do
+          ::Liquid::Template.tags.size.should == 2
+          ::Liquid::Template.tags['prefix_paragraph'].should be \
+            < PluginWithTags::Paragraph
+          ::Liquid::Template.tags['prefix_newline'].should be \
+            < PluginWithTags::Newline
+        end
+
         it 'only renders a tag if it is enabled in the liquid context' do
           expected_output = <<-TEMPLATE
             <p>Some Text</p>
             Some Text<br />
           TEMPLATE
 
-          register_tags(@prefixed_tags)
           template = ::Liquid::Template.parse(@raw_template)
           template.render(@context).should_not == expected_output
 
@@ -158,7 +168,6 @@ module Locomotive
             Some Text
           TEMPLATE
 
-          register_tags(@prefixed_tags)
           template = ::Liquid::Template.parse(@raw_template)
           template.render(@context).should == expected_output
         end
@@ -171,17 +180,8 @@ module Locomotive
             Some Text
           TEMPLATE
 
-          register_tags(@prefixed_tags)
           template = ::Liquid::Template.parse(@raw_template)
           template.render(@context).should == expected_output
-        end
-
-        protected
-
-        def register_tags(tags)
-          tags.each do |name, klass|
-            ::Liquid::Template.register_tag(name, klass)
-          end
         end
 
       end
