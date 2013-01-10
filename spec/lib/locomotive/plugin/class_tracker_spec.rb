@@ -28,22 +28,20 @@ module Locomotive
         num_added_classes.should == 1
       end
 
-=begin
       it 'gives custom trackers access to the default ID' do
         added_ids = []
         Locomotive::Plugin.add_plugin_class_tracker do |plugin_class|
           added_ids << plugin_class.default_plugin_id
         end
 
-        MyPlugin = Class.new
-        MyPlugin.class_eval do
+        MyNewPlugin = Class.new
+        MyNewPlugin.class_eval do
           include Locomotive::Plugin
         end
 
         added_ids.count.should == 1
-        added_ids.first.should == 'my_plugin'
+        added_ids.first.should == 'my_new_plugin'
       end
-=end
 
     end
   end
