@@ -3,8 +3,7 @@
 * Added liquid filters
 * Added liquid tags
 * Removed content type scoping (use liquid tags instead)
-* Fixed DBModel relationships
-* Added names for DBModel containers
+* Removed DBModels (just use Mongoid and LocomotiveCMS will isolate the models)
 
 ## v0.2.1
 

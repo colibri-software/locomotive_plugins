@@ -20,13 +20,12 @@ and run `bundle install`.
 
 To install the plugin in LocomotiveCMS, simply [create a LocomotiveCMS
 app](http://doc.locomotivecms.com/installation/getting_started) and add your
-plugin gem to the app's Gemfile.
+plugin gem to the app's Gemfile in the `locomotive_plugins` group:
 
-### Configuration
-
-After installing the locomotive\_plugins gem, run `rails generate
-locomotive_plugins:config` to generate the configuration file. See the
-generated file for a discussion of the various configuration options.
+    group(:locomotive_plugins) do
+      gem 'my_plugin'
+      gem 'another_plugin'
+    end
 
 
 ## Usage
@@ -50,10 +49,8 @@ ID, simply override the class level method `default_plugin_id`:
       end
     end
 
-Note that this ID may be overridden when including the plugin in a Locomotive
-CMS app. See the configuration options for details.
-
-See the sections below for usage examples. Also, see the
+See the sections below for usage examples of the various features. Also, see
+the
 [documentation](http://rubydoc.info/github/colibri-software/locomotive_plugins/).
 
 ### Initialization
