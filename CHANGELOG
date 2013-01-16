@@ -1,9 +1,10 @@
-## 1.0.0
+## v1.0.0
 
 * Added liquid filters
 * Added liquid tags
 * Removed content type scoping (use liquid tags instead)
 * Removed DBModels (just use Mongoid and LocomotiveCMS will isolate the models)
+* Added class tracking (used by Locomotive)
 
 ## v0.2.1
 

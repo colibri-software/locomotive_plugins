@@ -2,18 +2,22 @@
 module Locomotive
   module Plugin
     module Liquid
+      # @api internal
+      #
+      # Extension to liquid drops added by plugins.
       module DropExtension
 
-        # Allow setting the plugin_id, but only once
+        # Allow setting the plugin_id, but only once.
         def set_plugin_id(plugin_id)
           @_plugin_id ||= plugin_id
         end
 
-        # Set the context when the drop is invoked
+        # Add the plugin object to the context when invoked (see
+        # Liquid::Drop#invoke_drop)
         def invoke_drop(method)
           value = nil
 
-          ContextHelpers.add_plugin_object_to_context(self._plugin_id, @context) do
+          ContextHelpers.add_plugin_object_to_context(_plugin_id, @context) do
             value = super
           end
 
@@ -21,8 +25,9 @@ module Locomotive
         end
         alias :[] :invoke_drop
 
-        protected
+        private
 
+        # Plugin ID (see set_plugin_id).
         attr_reader :_plugin_id
 
       end

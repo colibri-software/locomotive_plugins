@@ -2,16 +2,21 @@
 module Locomotive
   module Plugin
     module Liquid
-      # @private
-      # Adds the plugin object to the liquid context object to be used by tags,
-      # filters, and drops. The add_plugin_object_to_context method looks in
-      # context.registers[:site] for an object which responds to
-      # #plugin_object_for_id in order to populate
-      # context.registers[:plugin_object]. If such an object does not exist,
-      # the method simply yields without altering the context object.
-      # Otherwise, after yielding, the context object is reset to its previous
-      # state
+      # @api internal
+      #
+      # Adds the plugin object to the liquid context.
       module ContextHelpers
+
+        # Adds the plugin object to the liquid context object to be used by
+        # tags, filters, and drops. This method looks in the +:site+ register
+        # for an object which responds to +#plugin_object_for_id+ in order to
+        # populate the +:plugin_object+ register.  If such an object does not
+        # exist, the method simply yields without altering the context object.
+        # Otherwise, after yielding, the context object is reset to its
+        # previous state.
+        #
+        # @param plugin_id [String] the plugin id to use
+        # @param context [Liquid::Context] the liquid context object
         def self.add_plugin_object_to_context(plugin_id, context)
           site = self.fetch_site(context)
           if site
@@ -27,6 +32,11 @@ module Locomotive
 
         protected
 
+        # Fetch the site from the context assuming it exists and responds to
+        # the +#plugin_object_for_id+ method.
+        #
+        # @param context [Liquid::Context] the liquid context object
+        # @return the site object or +nil+
         def self.fetch_site(context)
           site = context.registers[:site]
           site if site.respond_to?(:plugin_object_for_id)

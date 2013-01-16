@@ -7,7 +7,7 @@ module Locomotive
 
   # Include this module in a class which should be registered as a Locomotive
   # plugin. See the documentation for the various methods which can be called
-  # or overridden to describe the plugin
+  # or overridden to describe the plugin.
   module Plugin
 
     include ClassTracker
@@ -15,6 +15,11 @@ module Locomotive
     include Liquid
 
     # @private
+    #
+    # Set up the plugin class with some class methods, callbacks, and plugin
+    # class tracking.
+    #
+    # @param base the plugin class
     def self.included(base)
       self.add_liquid_tag_methods(base)
 
@@ -32,6 +37,9 @@ module Locomotive
       # Override this method to specify the default plugin_id to use when
       # Locomotive registers the plugin. This plugin_id may be overridden by
       # Locomotive CMS.
+      #
+      # @return by default, the underscored plugin class name (without the
+      #         namespace)
       def default_plugin_id
         to_s.split('::').last.underscore
       end
@@ -39,7 +47,7 @@ module Locomotive
       # Override this method to provide a module or array of modules to include
       # as liquid filters in the site. All public methods in the module will be
       # included as filters after being prefixed with the plugin id
-      # (#\\{plugin_id}_#\\{method_name})
+      # (#\\{plugin_id}_#\\{method_name}).
       #
       # @example
       #   class MyPlugin
@@ -55,7 +63,7 @@ module Locomotive
       # plugin. The return value must be a hash whose keys are the tag names
       # and values are the tag classes. The tag names will be included in
       # Locomotive's liquid renderer after being prefixed with the plugin id
-      # (#\\{plugin_id}_#\\{tag_name})
+      # (#\\{plugin_id}_#\\{tag_name}).
       #
       # @example
       #   class MyPlugin
@@ -69,28 +77,30 @@ module Locomotive
     end
 
     # This variable is set by LocomotiveCMS. It contains the controller which
-    # is handling the current request
+    # is handling the current request.
     attr_accessor :controller
 
     # This variable is set by LocomotiveCMS. It contains the current
-    # configuration hash for the plugin
+    # configuration hash for the plugin.
     attr_accessor :config
 
     # Initialize by supplying the current config parameters. Note that this
     # method should not be overridden for custom initialization of plugin
     # objects. Instead, override the initialize_plugin method.
+    #
+    # @param config the configuration hash
     def initialize(config)
       self.config = config
       self.initialize_plugin
     end
 
     # Override this method to supply custom initialization code for the plugin
-    # object. <b>Do not override the normal +initialize+ method</b>
+    # object. <b>Do not override the normal +initialize+ method</b>.
     def initialize_plugin
     end
 
     # Override this method to provide a liquid drop which should be available
-    # in the CMS
+    # in the CMS.
     def to_liquid
       nil
     end
@@ -106,9 +116,12 @@ module Locomotive
     # for the config UI. The HTML string may be a Handlebars.js template. By
     # default, this method will use the file supplied by the
     # +config_template_file+ method to construct the string (see
-    # #config_template_file)
+    # #config_template_file).
+    #
+    # @return by default, the contents of +config_template_file+, parsed by
+    #         HAML if needed
     def config_template_string
-      self.default_config_template_string
+      self.default_config_template_string(self.config_template_file)
     end
 
   end
