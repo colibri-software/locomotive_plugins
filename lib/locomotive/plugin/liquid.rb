@@ -44,8 +44,8 @@ module Locomotive
           raw_filter_modules.each do |mod|
             mod.public_instance_methods.each do |meth|
               @prefixed_liquid_filter_module.module_eval do
-                define_method(:"#{prefix}_#{meth}") do |input|
-                  self._passthrough_filter_call(prefix, meth, input)
+                define_method(:"#{prefix}_#{meth}") do |*args|
+                  self._passthrough_filter_call(prefix, meth, *args)
                 end
               end
             end

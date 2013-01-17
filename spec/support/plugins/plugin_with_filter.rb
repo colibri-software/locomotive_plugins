@@ -11,6 +11,10 @@ module Locomotive
           "http://#{input}"
         end
       end
+
+      def link_to(input, href)
+        %{<a href="#{href}">#{input}</a>}
+      end
     end
 
     def self.liquid_filters

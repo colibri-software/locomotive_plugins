@@ -53,12 +53,12 @@ module Locomotive
         # @param meth [Symbol] the method to call
         # @param input [String] the input to the method
         # @return the result of calling the method on the passthrough object
-        def _passthrough_filter_call(prefix, meth, input)
+        def _passthrough_filter_call(prefix, meth, *args)
           # Setup context object and call the passthrough
           output = nil
 
           ContextHelpers.add_plugin_object_to_context(prefix, @context) do
-            output = self._passthrough_object(prefix).__send__(meth, input)
+            output = self._passthrough_object(prefix).__send__(meth, *args)
           end
 
           output

@@ -63,11 +63,13 @@ module Locomotive
         it 'should contain all prefixed methods for provided filter modules' do
           mod = @plugin_with_filter_class.prefixed_liquid_filter_module('prefix')
           mod.public_instance_methods.should include(:prefix_add_http)
+          mod.public_instance_methods.should include(:prefix_link_to)
         end
 
         it 'should not contain any of the original methods' do
           mod = @plugin_with_filter_class.prefixed_liquid_filter_module('prefix')
           mod.public_instance_methods.should_not include(:add_http)
+          mod.public_instance_methods.should_not include(:link_to)
         end
 
         it 'the prefixed methods should pass through to the original methods' do
@@ -109,6 +111,12 @@ module Locomotive
           def obj.context ; @context ; end
 
           obj.context.should == strainer.context
+        end
+
+        it 'should support filters with multiple arguments' do
+          strainer.extend(@plugin_with_filter_class.prefixed_liquid_filter_module('prefix'))
+          strainer.prefix_link_to('My Link', 'http://www.example.com').should \
+            == %{<a href="http://www.example.com">My Link</a>}
         end
 
       end
