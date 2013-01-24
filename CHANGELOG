@@ -5,6 +5,7 @@
 * Removed content type scoping (use liquid tags instead)
 * Removed DBModels (just use Mongoid and LocomotiveCMS will isolate the models)
 * Added class tracking (used by Locomotive)
+* Added ability to supply a rack app for handling requests
 
 ## v0.2.1
 
