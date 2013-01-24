@@ -13,6 +13,7 @@ module Locomotive
     include ClassTracker
     include ConfigUI
     include Liquid
+    include RackAppHelpers
 
     # @private
     #
@@ -21,7 +22,8 @@ module Locomotive
     #
     # @param base the plugin class
     def self.included(base)
-      self.add_liquid_tag_methods(base)
+      self.add_liquid_class_methods(base)
+      self.add_rack_app_helper_methods(base)
 
       base.class_eval do
         extend ActiveModel::Callbacks
@@ -74,6 +76,14 @@ module Locomotive
       def liquid_tags
         {}
       end
+
+      # Override this method to supply a rack app to be used for handling
+      # requests. Locomotive CMS will mount this app on a path dependent on the
+      # `plugin_id`. See `RackAppHelpers` for some helper methods.
+      def rack_app
+        nil
+      end
+
     end
 
     # This variable is set by LocomotiveCMS. It contains the controller which

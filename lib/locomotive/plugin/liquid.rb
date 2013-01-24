@@ -18,7 +18,7 @@ module Locomotive
         # Adds methods from LiquidClassMethods module.
         #
         # @param base the plugin class to extend LiquidClassMethods
-        def add_liquid_tag_methods(base)
+        def add_liquid_class_methods(base)
           base.extend(LiquidClassMethods)
         end
       end

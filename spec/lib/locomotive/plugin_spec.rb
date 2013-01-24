@@ -47,5 +47,10 @@ module Locomotive
       }
     end
 
+    it 'should optionally supply a Rack application' do
+      UselessPlugin.rack_app.should be_nil
+      PluginWithRackApp.rack_app.should_not be_nil
+    end
+
   end
 end

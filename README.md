@@ -279,3 +279,14 @@ comes in to site A which causes a Mongoid Document to be saved to the database,
 this document will not be accessible to the plugin when a request comes in to
 site B. Thus plugin database models should be developed in the context of a
 single site, since each site will have its own database.
+
+### Rack App
+
+Plugins can supply a Rack Application to be used for request handling. Do so by
+overriding the `rack_app` class method on the plugin class. The plugin object
+can also build URLs and paths for that Rack App without knowledge of where it
+is mounted. This is important because Locomotive will mount the rack
+application on a path based on the plugin's `plugin_id`. Given a string `path`
+which is a path relative to the root of the rack app,
+`plugin_object.full_path(path)` will give the full absolute path and
+`plugin_object.full_url(path)` will give the full URL.
