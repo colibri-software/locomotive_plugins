@@ -23,7 +23,6 @@ module Locomotive
     # @param base the plugin class
     def self.included(base)
       self.add_liquid_class_methods(base)
-      self.add_rack_app_helper_methods(base)
 
       base.class_eval do
         extend ActiveModel::Callbacks

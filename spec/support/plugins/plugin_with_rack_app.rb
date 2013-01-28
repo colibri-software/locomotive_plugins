@@ -3,7 +3,16 @@ class PluginWithRackApp
   include Locomotive::Plugin
 
   def self.rack_app
-    Proc.new do
+    RackApp
+  end
+
+  class RackApp
+    class << self
+      attr_accessor :block
+    end
+
+    def self.call(env)
+      block.call
       [200, {'Content-Type' => 'text/html'}, []]
     end
   end

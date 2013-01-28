@@ -5,60 +5,96 @@ module Locomotive
   module Plugin
     describe RackAppHelpers do
 
-      before(:all) do
-        PluginWithRackApp.set_mountpoint('http://www.example.com/my/path')
-      end
+      let(:config) { {} }
 
-      before(:each) do
-        @config = {}
-        @plugin = PluginWithRackApp.new(@config)
-      end
+      let(:plugin) { PluginWithRackApp.new(config) }
 
-      it 'should supply an absolute path based on where it is mounted' do
-        @plugin.full_path('/plugin/path').should == '/my/path/plugin/path'
-        @plugin.full_path('another//path').should == '/my/path/another//path'
-      end
+      let(:prepared_app) { plugin.prepared_rack_app }
 
-      it 'should supply a full URL based on where it is mounted' do
-        @plugin.full_url('/plugin/path').should ==
-          'http://www.example.com/my/path/plugin/path'
-        @plugin.full_url('another//path').should ==
-          'http://www.example.com/my/path/another//path'
-      end
+      let(:original_app) { plugin.class.rack_app }
 
-      it 'should only allow URLs with proper format' do
-        old_mountpoint = PluginWithRackApp.mountpoint
-
-        bad_mountpoints = [
-          'my/path',
-          'my.server.com/my/path',
-          'ftp://my.server.com',
-          'http://my.server.com/my/path?q=value',
-          'http://my.server.com/my/path#fragment',
-          'https://my.server.com/my/path?q=value',
-          'https://my.server.com/my/path#fragment'
-        ]
-
-        good_mountpoints = [
-          'http://my.server.com/my/path',
-          'http://my.server.com:3000/my/path',
-          'https://my.server.com/my/path',
-          'https://my.server.com:3000/my/path'
-        ]
-
-        bad_mountpoints.each do |mountpoint|
-          lambda do
-            PluginWithRackApp.set_mountpoint(mountpoint)
-          end.should raise_exception(Locomotive::Plugin::Error)
-          PluginWithRackApp.mountpoint.should == old_mountpoint
+      it 'should add the plugin object to the Rack app' do
+        stub_app_call do
+          original_app.plugin_object.should == plugin
         end
 
-        good_mountpoints.each do |mountpoint|
-          lambda do
-            PluginWithRackApp.set_mountpoint(mountpoint)
-          end.should_not raise_exception
-          PluginWithRackApp.mountpoint.to_s.should == mountpoint
+        prepared_app.call(default_env)
+      end
+
+      it 'should add the Rack environment to the Rack app' do
+        stub_app_call do
+          original_app.env.should == default_env
         end
+
+        prepared_app.call(default_env)
+      end
+
+      it 'should add path and url helpers to the Rack app' do
+        original_app.respond_to?(:full_path).should be_true
+        original_app.respond_to?(:full_url).should be_true
+      end
+
+      it 'should not add the helper methods if they have already been added' do
+        NewRackAppClass = Class.new do
+          def method_missing(*args)
+          end
+        end
+
+        plugin = PluginWithRackApp.new(config)
+        rack_app = NewRackAppClass.new
+        plugin.class.stubs(:rack_app).returns(rack_app)
+
+        rack_app.expects(:extend).with(HelperMethods)
+        app = plugin.prepared_rack_app
+
+        plugin = PluginWithRackApp.new(config)
+        rack_app = NewRackAppClass.new
+        plugin.class.stubs(:rack_app).returns(rack_app)
+
+        app = plugin.prepared_rack_app
+        rack_app.expects(:extend).with(HelperMethods).never
+        app = plugin.prepared_rack_app
+      end
+
+      it 'should supply an absolute path' do
+        stub_app_call do
+          original_app.full_path('/plugin/path').should == '/my/path/plugin/path'
+          original_app.full_path('another//path').should == '/my/path/another//path'
+        end
+
+        prepared_app.call(default_env)
+      end
+
+      it 'should supply a full url' do
+        stub_app_call do
+          original_app.full_url('/plugin/path').should ==
+            'http://www.example.com/my/path/plugin/path'
+          original_app.full_url('another//path').should ==
+            'http://www.example.com/my/path/another//path'
+        end
+
+        prepared_app.call(default_env)
+      end
+
+      protected
+
+      def default_env
+        {
+          'REQUEST_URI' => 'http://www.example.com/my/path/request/path',
+          'SCRIPT_NAME' => '/my/path'
+        }
+      end
+
+      # Sets up an object which expects the method `the_block_has_been_called`
+      # to be invoked. This way, if you stub the app call but do not call
+      # `prepared_app.call`, the spec will fail.
+      def stub_app_call(&block)
+        obj = Object.new
+        original_app.block = Proc.new do
+          obj.the_block_has_been_called
+          block.call
+        end
+        obj.expects(:the_block_has_been_called).at_least_once
       end
 
     end
