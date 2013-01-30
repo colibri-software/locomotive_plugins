@@ -283,10 +283,16 @@ single site, since each site will have its own database.
 ### Rack App
 
 Plugins can supply a Rack Application to be used for request handling. Do so by
-overriding the `rack_app` class method on the plugin class. The plugin object
-can also build URLs and paths for that Rack App without knowledge of where it
-is mounted. This is important because Locomotive will mount the rack
-application on a path based on the plugin's `plugin_id`. Given a string `path`
-which is a path relative to the root of the rack app,
-`plugin_object.full_path(path)` will give the full absolute path and
-`plugin_object.full_url(path)` will give the full URL.
+overriding the `rack_app` class method on the plugin class. The Rack app will
+be given some helper methods:
+
+* `plugin_object`: retrieve the plugin object.
+* `full_path(path)`: generate the full url path for `path`. The `path` variable
+  is a url path relative to the mountpoint of the Rack app.
+* `full_url(path)`: generate the full url for `path`. The `path` variable is a
+  url path relative to the mountpoint of the Rack app.
+
+The `full_path` and `full_url` helpers may be used by the Rack app to generate
+full paths and urls without explicit knowledge of the Rack app's mountpoint.
+This is important since Locomotive will mount the app to a path based on its
+`plugin_id`.
