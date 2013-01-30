@@ -13,6 +13,11 @@ module Locomotive
 
       let(:original_app) { plugin.class.rack_app }
 
+      it 'should only supply a Rack app if one has been given' do
+        plugin = UselessPlugin.new({})
+        plugin.prepared_rack_app.should be_nil
+      end
+
       it 'should add the plugin object to the Rack app' do
         stub_app_call do
           original_app.plugin_object.should == plugin

@@ -89,13 +89,15 @@ module Locomotive
       def prepared_rack_app
         app = self.class.rack_app
 
-        # Extend helper module if needed
-        unless app.singleton_class.included_modules.include?(HelperMethods)
-          app.extend(HelperMethods)
-        end
+        if app
+          # Extend helper module if needed
+          unless app.singleton_class.included_modules.include?(HelperMethods)
+            app.extend(HelperMethods)
+          end
 
-        app.plugin_object = self
-        RackAppWrapper.new(app)
+          app.plugin_object = self
+          RackAppWrapper.new(app)
+        end
       end
 
     end
