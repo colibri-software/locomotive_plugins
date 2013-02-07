@@ -107,7 +107,17 @@ Plugin code:
       include Locomotive::Plugin
 
       def to_liquid
-        { :userid => self.get_authenticated_user_id }
+        BasicAuthDrop.new(self.get_authenticated_user_id)
+      end
+    end
+
+    class BasicAuthDrop < ::Liquid::Drop
+      def initialize(userid)
+        @userid = userid
+      end
+
+      def userid
+        @userid
       end
     end
 
