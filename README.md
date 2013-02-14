@@ -55,15 +55,22 @@ the
 
 ### Initialization
 
-To initialize a plugin object, do not override the `initialize` method because
-this method is defined by the `Locomotive::Plugin` module and used by
-Locomotive. Instead, override the `initialize_plugin` method.
+There are two methods which can be overridden to customize the initialization
+process. The class method `plugin_loaded` is called after the rails app first
+loads the plugin. The `initialize` method may also be overridden in order run
+custom code when the plugin object is constructed. Note that the `initialize`
+method must not take any arguments.
 
     class MyPlugin
       include Locomotive::Plugin
 
-      def initialize_plugin
-        # Custom initialization code
+      def self.plugin_loaded
+        # Initial initialization code (only called once)
+      end
+
+      def initialize
+        # Plugin object initialization code. This is called before each request
+        # for which this plugin is needed
       end
     end
 
