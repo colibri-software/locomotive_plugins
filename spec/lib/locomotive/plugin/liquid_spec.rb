@@ -8,8 +8,7 @@ module Locomotive
       context '#setup_liquid_context' do
 
         before(:each) do
-          @config = {}
-          @plugin = MyPlugin.new(@config)
+          @plugin = MyPlugin.new
           @context = ::Liquid::Context.new({}, {}, {}, true)
           @plugin.setup_liquid_context('my_plugin', @context)
         end

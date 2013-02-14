@@ -5,16 +5,14 @@ module Locomotive
   module Plugin
     describe RackAppHelpers do
 
-      let(:config) { {} }
-
-      let(:plugin) { PluginWithRackApp.new(config) }
+      let(:plugin) { PluginWithRackApp.new }
 
       let(:prepared_app) { plugin.prepared_rack_app }
 
       let(:original_app) { plugin.class.rack_app }
 
       it 'should only supply a Rack app if one has been given' do
-        plugin = UselessPlugin.new({})
+        plugin = UselessPlugin.new
         plugin.prepared_rack_app.should be_nil
       end
 
@@ -45,14 +43,14 @@ module Locomotive
           end
         end
 
-        plugin = PluginWithRackApp.new(config)
+        plugin = PluginWithRackApp.new
         rack_app = NewRackAppClass.new
         plugin.class.stubs(:rack_app).returns(rack_app)
 
         rack_app.expects(:extend).with(HelperMethods)
         app = plugin.prepared_rack_app
 
-        plugin = PluginWithRackApp.new(config)
+        plugin = PluginWithRackApp.new
         rack_app = NewRackAppClass.new
         plugin.class.stubs(:rack_app).returns(rack_app)
 

@@ -5,20 +5,8 @@ module Locomotive
   describe Plugin do
 
     before(:each) do
-      @config = {}
-      @plugin = MyPlugin.new(@config)
-      @useless_plugin = UselessPlugin.new(@config)
-    end
-
-    it 'should call custom initialization methods' do
-      @plugin.custom_attribute.should == 'Value'
-    end
-
-    it 'should call the given block before custom initialization methods' do
-      @plugin = MyPlugin.new(@config) do |obj|
-        obj.custom_attribute.should be_nil
-      end
-      @plugin.custom_attribute.should_not be_nil
+      @plugin = MyPlugin.new
+      @useless_plugin = UselessPlugin.new
     end
 
     it 'should have filter callbacks' do

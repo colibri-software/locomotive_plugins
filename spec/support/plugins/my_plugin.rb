@@ -19,9 +19,11 @@ module Locomotive
     after_filter :my_method2
     around_filter :my_method3
 
-    attr_accessor :custom_attribute
+    class << self
+      attr_accessor :custom_attribute
+    end
 
-    def initialize_plugin
+    def self.plugin_loaded
       self.custom_attribute = 'Value'
     end
 

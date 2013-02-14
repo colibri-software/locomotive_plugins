@@ -7,14 +7,22 @@ module Locomotive
 
       before(:each) do
         @config = {}
-        @plugin = MyPlugin.new(@config)
-        @plugin_with_non_string_path = PluginWithNonStringPath.new(@config)
-        @another_plugin = MyOtherPlugin.new(@config)
-        @useless_plugin = UselessPlugin.new(@config)
+
+        @plugin = MyPlugin.new
+        @plugin.config = @config
+
+        @plugin_with_non_string_path = PluginWithNonStringPath.new
+        @plugin_with_non_string_path.config = @config
+
+        @another_plugin = MyOtherPlugin.new
+        @another_plugin.config = @config
+
+        @useless_plugin = UselessPlugin.new
+        @useless_plugin.config = @config
       end
 
       it 'should return the template string of an HTML file' do
-        @plugin = MyPlugin.new({})
+        @plugin = MyPlugin.new
         filepath = @plugin.config_template_file
         @plugin.config_template_string.should == IO.read(filepath)
       end

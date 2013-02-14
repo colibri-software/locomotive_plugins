@@ -9,8 +9,7 @@ module Locomotive
         context '#add_plugin_object_to_context' do
 
           before(:each) do
-            @config = {}
-            @plugin = MyPlugin.new(@config)
+            @plugin = MyPlugin.new
             @context = ::Liquid::Context.new({}, {}, {site: @site}, true)
 
             plugin = @plugin

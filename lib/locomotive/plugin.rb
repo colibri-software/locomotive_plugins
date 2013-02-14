@@ -12,6 +12,7 @@ module Locomotive
 
     include ClassTracker
     include ConfigUI
+    include LoadInitialization
     include Liquid
     include RackAppHelpers
 
@@ -22,6 +23,7 @@ module Locomotive
     #
     # @param base the plugin class
     def self.included(base)
+      self.add_load_initialization_class_methods(base)
       self.add_liquid_class_methods(base)
 
       base.class_eval do
@@ -92,21 +94,6 @@ module Locomotive
     # This variable is set by LocomotiveCMS. It contains the current
     # configuration hash for the plugin.
     attr_accessor :config
-
-    # Initialize by supplying the current config parameters. Note that this
-    # method should not be overridden for custom initialization of plugin
-    # objects. Instead, override the initialize_plugin method.
-    #
-    # @param config the configuration hash
-    def initialize(config)
-      self.config = config
-      self.initialize_plugin
-    end
-
-    # Override this method to supply custom initialization code for the plugin
-    # object. <b>Do not override the normal +initialize+ method</b>.
-    def initialize_plugin
-    end
 
     # Override this method to provide a liquid drop which should be available
     # in the CMS.
