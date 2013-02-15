@@ -11,6 +11,10 @@ module Locomotive
 
       let(:original_app) { plugin.rack_app }
 
+      before(:each) do
+        plugin.mountpoint = 'http://www.example.com/my/path/'
+      end
+
       it 'should only supply a Rack app if one has been given' do
         plugin = UselessPlugin.new
         plugin.prepared_rack_app.should be_nil
@@ -19,14 +23,6 @@ module Locomotive
       it 'should add the plugin object to the Rack app' do
         stub_app_call do
           original_app.plugin_object.should == plugin
-        end
-
-        prepared_app.call(default_env)
-      end
-
-      it 'should add the Rack environment to the Rack app' do
-        stub_app_call do
-          original_app.env.should == default_env
         end
 
         prepared_app.call(default_env)
@@ -59,21 +55,37 @@ module Locomotive
         app = plugin.prepared_rack_app
       end
 
-      it 'should supply an absolute path' do
+      it 'should supply an absolute path from the plugin object and the Rack app' do
+        path0 = '/plugin/path'
+        path1 = 'another//path'
+
+        full_path0 = '/my/path/plugin/path'
+        full_path1 = '/my/path/another//path'
+
+        plugin.rack_app_full_path(path0).should == full_path0
+        plugin.rack_app_full_path(path1).should == full_path1
+
         stub_app_call do
-          original_app.full_path('/plugin/path').should == '/my/path/plugin/path'
-          original_app.full_path('another//path').should == '/my/path/another//path'
+          original_app.full_path(path0).should == full_path0
+          original_app.full_path(path1).should == full_path1
         end
 
         prepared_app.call(default_env)
       end
 
-      it 'should supply a full url' do
+      it 'should supply a full url from the plugin object and the Rack app' do
+        path0 = '/plugin/path'
+        path1 = 'another//path'
+
+        full_url0 = 'http://www.example.com/my/path/plugin/path'
+        full_url1 = 'http://www.example.com/my/path/another//path'
+
+        plugin.rack_app_full_url(path0).should == full_url0
+        plugin.rack_app_full_url(path1).should == full_url1
+
         stub_app_call do
-          original_app.full_url('/plugin/path').should ==
-            'http://www.example.com/my/path/plugin/path'
-          original_app.full_url('another//path').should ==
-            'http://www.example.com/my/path/another//path'
+          original_app.full_url(path0).should == full_url0
+          original_app.full_url(path1).should == full_url1
         end
 
         prepared_app.call(default_env)
