@@ -300,8 +300,8 @@ single site, since each site will have its own database.
 ### Rack App
 
 Plugins can supply a Rack Application to be used for request handling. Do so by
-overriding the `rack_app` class method on the plugin class. The Rack app will
-be given some helper methods:
+overriding the `rack_app` instance method in the plugin class. The Rack app
+will be given some helper methods:
 
 * `plugin_object`: retrieve the plugin object.
 * `full_path(path)`: generate the full url path for `path`. The `path` variable
