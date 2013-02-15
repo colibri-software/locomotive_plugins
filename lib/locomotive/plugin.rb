@@ -28,7 +28,8 @@ module Locomotive
 
       base.class_eval do
         extend ActiveModel::Callbacks
-        define_model_callbacks :filter
+        define_model_callbacks :page_render
+        define_model_callbacks :rack_app_request
       end
 
       base.extend ClassMethods
