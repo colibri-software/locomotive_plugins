@@ -2,7 +2,7 @@
 class PluginWithRackApp
   include Locomotive::Plugin
 
-  def self.rack_app
+  def rack_app
     RackApp
   end
 

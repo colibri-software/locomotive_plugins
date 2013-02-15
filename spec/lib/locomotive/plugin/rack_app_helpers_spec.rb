@@ -9,7 +9,7 @@ module Locomotive
 
       let(:prepared_app) { plugin.prepared_rack_app }
 
-      let(:original_app) { plugin.class.rack_app }
+      let(:original_app) { plugin.rack_app }
 
       it 'should only supply a Rack app if one has been given' do
         plugin = UselessPlugin.new
@@ -45,7 +45,7 @@ module Locomotive
 
         plugin = PluginWithRackApp.new
         rack_app = NewRackAppClass.new
-        plugin.class.stubs(:rack_app).returns(rack_app)
+        plugin.stubs(:rack_app).returns(rack_app)
 
         rack_app.expects(:extend).with(HelperMethods)
         app = plugin.prepared_rack_app
