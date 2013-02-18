@@ -28,6 +28,12 @@ module Locomotive
         end
       end
 
+      it 'should not fail if no plugin_loaded method defined' do
+        lambda do
+          UselessPlugin.do_load_initialization
+        end.should_not raise_error
+      end
+
     end
   end
 end

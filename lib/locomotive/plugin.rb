@@ -79,6 +79,11 @@ module Locomotive
         {}
       end
 
+      # Override this method to provide functionality which will be executed
+      # when the CMS starts up and loads all plugins.
+      def plugin_loaded
+      end
+
     end
 
     # This variable is set by LocomotiveCMS. It contains the controller which
