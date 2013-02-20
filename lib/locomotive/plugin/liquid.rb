@@ -129,10 +129,13 @@ module Locomotive
         end
 
         # Add drop with extension
+        context['plugins'] ||= {}
         drop = self.to_liquid
-        drop.extend(Locomotive::Plugin::Liquid::DropExtension)
-        drop.set_plugin_id(plugin_id)
-        (context['plugins'] ||= {})[plugin_id] = drop
+        if drop
+          drop.extend(Locomotive::Plugin::Liquid::DropExtension)
+          drop.set_plugin_id(plugin_id)
+          context['plugins'][plugin_id] = drop
+        end
 
         # Add filters
         context.add_filters(self.class.prefixed_liquid_filter_module(plugin_id))

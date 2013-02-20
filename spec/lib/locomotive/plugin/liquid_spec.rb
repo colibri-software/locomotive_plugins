@@ -17,6 +17,13 @@ module Locomotive
           @context['plugins.my_plugin'].class.should == MyPlugin::MyDrop
         end
 
+        it 'should not add the drop extension to nil' do
+          plugin = UselessPlugin.new
+          plugin.setup_liquid_context('useless_plugin', @context)
+          plugin.to_liquid.should be_nil
+          plugin.to_liquid.respond_to?(:[]).should_not be_true
+        end
+
         it 'should add a set of enabled liquid tags' do
           @context.registers[:enabled_plugin_tags].class.should == Set
           @context.registers[:enabled_plugin_tags].size.should == 1
