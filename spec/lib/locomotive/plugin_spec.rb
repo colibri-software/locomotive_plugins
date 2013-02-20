@@ -9,11 +9,13 @@ module Locomotive
       @useless_plugin = UselessPlugin.new
     end
 
-    it 'should have filter callbacks' do
-      @plugin.expects(:my_method1)
-      @plugin.expects(:my_method2)
-      @plugin.expects(:my_method3)
-      @plugin.run_callbacks(:filter) do
+    %w{page_render rack_app_request}.each do |type|
+      it "should have #{type} callbacks" do
+        @plugin.expects(:my_method1)
+        @plugin.expects(:my_method2)
+        @plugin.expects(:my_method3)
+        @plugin.run_callbacks(:"#{type}") do
+        end
       end
     end
 

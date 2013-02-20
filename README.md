@@ -74,17 +74,22 @@ method must not take any arguments.
       end
     end
 
-### Before filters
+### Callbacks
 
-A plugin may add a before filter which is run before every page load on the
-website being hosted in Locomotive CMS. The before filter has access to the
-controller which is being invoked, and a config variable which is set within
-the Locomotive UI.
+A plugin may use ActiveModel callbacks. Currently, two callbacks are supported:
+`page_render` and `rack_app_request`, both allowing `before`, `around`, and
+`after` callbacks. The `page_render` callbacks are called for all enabled
+plugins when a public-facing liquid page in LocomotiveCMS is rendered. The
+`rack_app_request` callbacks are called for a specific plugin when a request is
+about to be handed to its rack app (see the section below on including a Rack
+app in the plugin).  The `page_render` callbacks have access to the controller
+which is being invoked, and both callback types have access to the config
+variable which is set within the Locomotive UI.
 
     class BasicAuth
       include Locomotive::Plugin
 
-      before_filter :authenticate
+      before_page_render :authenticate
 
       def authenticate
         if self.config[:use_basic_auth]

@@ -15,9 +15,13 @@ module Locomotive
     class MyTag < ::Liquid::Tag
     end
 
-    before_filter :my_method1
-    after_filter :my_method2
-    around_filter :my_method3
+    before_page_render :my_method1
+    after_page_render :my_method2
+    around_page_render :my_method3
+
+    before_rack_app_request :my_method1
+    after_rack_app_request :my_method2
+    around_rack_app_request :my_method3
 
     class << self
       attr_accessor :custom_attribute

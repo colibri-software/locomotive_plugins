@@ -28,7 +28,8 @@ module Locomotive
 
       base.class_eval do
         extend ActiveModel::Callbacks
-        define_model_callbacks :filter
+        define_model_callbacks :page_render
+        define_model_callbacks :rack_app_request
       end
 
       base.extend ClassMethods
@@ -76,6 +77,11 @@ module Locomotive
       #   end
       def liquid_tags
         {}
+      end
+
+      # Override this method to provide functionality which will be executed
+      # when the CMS starts up and loads all plugins.
+      def plugin_loaded
       end
 
     end

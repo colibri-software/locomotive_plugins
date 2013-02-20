@@ -25,11 +25,17 @@ module Locomotive
 
       # This module adds class-level initialization methods to the plugin class.
       module LoadInitializationClassMethods
+        # Performs class-level initialization and ensures that it is only done
+        # once. If a block is given, that block is called before the custom
+        # `plugin_loaded` method is called. LocomotiveCMS calls this method on
+        # all plugins after they are loaded.
         def do_load_initialization
           raise InitializationError,
             'cannot initialize plugin more than once!' if @done_load_inialization
 
           @done_load_inialization = true
+
+          yield if block_given?
 
           self.plugin_loaded
         end
