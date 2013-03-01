@@ -70,25 +70,18 @@ module Locomotive
         ].join('/')
       end
 
-      # Adds helper methods to the Rack app and returns another Rack app which
-      # wraps it. This method gets the Rack application ready to be called by
-      # Locomotive. Locomotive CMS calls this method to get the Rack app rather
-      # than calling `rack_app` directly.
+      # Gets the Rack app and sets up additional helper methods. This value is memoized
+      # and should be used to access the rack_app, rather than calling the
+      # `rack_app` class method directly.
       #
       # @return the Rack app with helper methods or nil if no Rack app is given
-      def prepared_rack_app
-        app = self.class.rack_app
-
-        if app
-          # Extend helper module if needed
-          unless app.singleton_class.included_modules.include?(HelperMethods)
+      def mounted_rack_app
+        @mounted_rack_app ||= self.class.rack_app.tap do |app|
+          if app
             app.extend(HelperMethods)
+            app.plugin_object = self
           end
-
-          app.plugin_object = self
         end
-
-        app
       end
 
       protected

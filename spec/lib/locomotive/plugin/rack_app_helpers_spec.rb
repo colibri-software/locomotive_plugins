@@ -7,7 +7,7 @@ module Locomotive
 
       let(:plugin) { PluginWithRackApp.new }
 
-      let(:prepared_app) { plugin.prepared_rack_app }
+      let(:mounted_app) { plugin.mounted_rack_app }
 
       let(:original_app) { plugin.class.rack_app }
 
@@ -17,7 +17,7 @@ module Locomotive
 
       it 'should only supply a Rack app if one has been given' do
         plugin = UselessPlugin.new
-        plugin.prepared_rack_app.should be_nil
+        plugin.mounted_rack_app.should be_nil
       end
 
       it 'should add the plugin object to the Rack app' do
@@ -25,7 +25,7 @@ module Locomotive
           original_app.plugin_object.should == plugin
         end
 
-        prepared_app.call(default_env)
+        mounted_app.call(default_env)
       end
 
       it 'should add path and url helpers to the Rack app' do
@@ -44,15 +44,15 @@ module Locomotive
         plugin.class.stubs(:rack_app).returns(rack_app)
 
         rack_app.expects(:extend).with(HelperMethods)
-        app = plugin.prepared_rack_app
+        app = plugin.mounted_rack_app
 
         plugin = PluginWithRackApp.new
         rack_app = NewRackAppClass.new
         plugin.class.stubs(:rack_app).returns(rack_app)
 
-        app = plugin.prepared_rack_app
+        app = plugin.mounted_rack_app
         rack_app.expects(:extend).with(HelperMethods).never
-        app = plugin.prepared_rack_app
+        app = plugin.mounted_rack_app
       end
 
       it 'should supply an absolute path from the plugin object and the Rack app' do
@@ -70,7 +70,7 @@ module Locomotive
           original_app.full_path(path1).should == full_path1
         end
 
-        prepared_app.call(default_env)
+        mounted_app.call(default_env)
       end
 
       it 'should supply a full url from the plugin object and the Rack app' do
@@ -88,7 +88,7 @@ module Locomotive
           original_app.full_url(path1).should == full_url1
         end
 
-        prepared_app.call(default_env)
+        mounted_app.call(default_env)
       end
 
       protected
@@ -102,7 +102,7 @@ module Locomotive
 
       # Sets up an object which expects the method `the_block_has_been_called`
       # to be invoked. This way, if you stub the app call but do not call
-      # `prepared_app.call`, the spec will fail.
+      # `mounted_app.call`, the spec will fail.
       def stub_app_call(&block)
         obj = Object.new
         original_app.block = Proc.new do
