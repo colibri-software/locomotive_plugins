@@ -9,7 +9,7 @@ module Locomotive
 
       let(:prepared_app) { plugin.prepared_rack_app }
 
-      let(:original_app) { plugin.rack_app }
+      let(:original_app) { plugin.class.rack_app }
 
       before(:each) do
         plugin.mountpoint = 'http://www.example.com/my/path/'
@@ -41,7 +41,7 @@ module Locomotive
 
         plugin = PluginWithRackApp.new
         rack_app = NewRackAppClass.new
-        plugin.stubs(:rack_app).returns(rack_app)
+        plugin.class.stubs(:rack_app).returns(rack_app)
 
         rack_app.expects(:extend).with(HelperMethods)
         app = plugin.prepared_rack_app

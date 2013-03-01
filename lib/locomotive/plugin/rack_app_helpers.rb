@@ -77,7 +77,7 @@ module Locomotive
       #
       # @return the Rack app with helper methods or nil if no Rack app is given
       def prepared_rack_app
-        app = self.rack_app
+        app = self.class.rack_app
 
         if app
           # Extend helper module if needed
