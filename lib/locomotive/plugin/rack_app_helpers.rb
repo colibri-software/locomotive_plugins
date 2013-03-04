@@ -2,7 +2,7 @@
 module Locomotive
   module Plugin
     # This module adds helpers for handling the Rack app supplied by the
-    # `rack_app` method.
+    # +rack_app+ method.
     module RackAppHelpers
 
       # Helper methods to be added to the Rack application.
@@ -74,7 +74,7 @@ module Locomotive
 
         # Gets the Rack app and sets up additional helper methods. This value is memoized
         # and should be used to access the rack_app, rather than calling the
-        # `rack_app` class method directly.
+        # +rack_app+ class method directly.
         #
         # @return the Rack app with helper methods or nil if no Rack app is given
         def mounted_rack_app
@@ -92,7 +92,14 @@ module Locomotive
         end
       end
 
-      # TODO: document this
+      # @!method rack_app_full_path(path)
+      #   Delegates to +ClassMethods#rack_app_full_path+
+      # @!method rack_app_full_url(path)
+      #   Delegates to +ClassMethods#rack_app_full_url+
+      # @!method mountpoint
+      #   Delegates to +ClassMethods#mountpoint+
+      # @!method mounted_rack_app
+      #   Delegates to +ClassMethods#mounted_rack_app+
       %w{rack_app_full_path rack_app_full_url mountpoint mounted_rack_app}.each do |meth|
         define_method(meth) do |*args|
           self.class.public_send(meth, *args)

@@ -90,7 +90,7 @@ module Locomotive
 
       # Override this method to supply a rack app to be used for handling
       # requests. Locomotive CMS will mount this app on a path dependent on the
-      # `plugin_id`. See `RackAppHelpers` for some helper methods.
+      # +plugin_id+. See +RackAppHelpers+ for some helper methods.
       def rack_app
         nil
       end
