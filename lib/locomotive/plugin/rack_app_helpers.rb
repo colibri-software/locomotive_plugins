@@ -32,46 +32,6 @@ module Locomotive
 
       # Methods to be added to the plugin class
       module ClassMethods
-        # The mountpoint of the Rack app.
-        #
-        # @return the mountpoint
-        def mountpoint
-          @mountpoint ||= '/'
-        end
-
-        # Set the mountpoint of the Rack app.
-        #
-        # @param mountpoint [String] the new mountpoint
-        def mountpoint=(mountpoint)
-          @mountpoint = mountpoint
-        end
-
-        # Generate the full absolute path within the plugin's rack app for the
-        # given path based on the mountpoint.
-        #
-        # @param path [String]  the path relative to the mountpoint of the rack
-        #                       app
-        # @return the absolute path
-        def rack_app_full_path(path)
-          [
-            base_uri_object.path.sub(%r{/+$}, ''),
-            path.sub(%r{^/+}, '')
-          ].join('/')
-        end
-
-        # Generate the full URL for the given path based on the mountpoint of
-        # this plugin's rack app.
-        #
-        # @param path [String]  the path relative to the mountpoint of the rack
-        #                       app
-        # @return the URL
-        def rack_app_full_url(path)
-          [
-            base_uri_object.to_s.sub(%r{/+$}, ''),
-            path.sub(%r{^/+}, '')
-          ].join('/')
-        end
-
         # Gets the Rack app and sets up additional helper methods. This value is memoized
         # and should be used to access the rack_app, rather than calling the
         # +rack_app+ class method directly.
@@ -84,29 +44,60 @@ module Locomotive
             end
           end
         end
-
-        protected
-
-        def base_uri_object
-          URI(mountpoint)
-        end
       end
 
-      # @!method rack_app_full_path(path)
-      #   Delegates to +ClassMethods#rack_app_full_path+
-      # @!method rack_app_full_url(path)
-      #   Delegates to +ClassMethods#rack_app_full_url+
-      # @!method mountpoint
-      #   Delegates to +ClassMethods#mountpoint+
-      # @!method mounted_rack_app
-      #   Delegates to +ClassMethods#mounted_rack_app+
-      %w{rack_app_full_path rack_app_full_url mountpoint mounted_rack_app}.each do |meth|
-        define_method(meth) do |*args|
-          self.class.public_send(meth, *args)
-        end
+      # The mountpoint of the Rack app.
+      #
+      # @return the mountpoint
+      def mountpoint
+        @mountpoint ||= '/'
+      end
+
+      # Set the mountpoint of the Rack app.
+      #
+      # @param mountpoint [String] the new mountpoint
+      def mountpoint=(mountpoint)
+        @mountpoint = mountpoint
+      end
+
+      # Generate the full absolute path within the plugin's rack app for the
+      # given path based on the mountpoint.
+      #
+      # @param path [String]  the path relative to the mountpoint of the rack
+      #                       app
+      # @return the absolute path
+      def rack_app_full_path(path)
+        [
+          base_uri_object.path.sub(%r{/+$}, ''),
+          path.sub(%r{^/+}, '')
+        ].join('/')
+      end
+
+      # Generate the full URL for the given path based on the mountpoint of
+      # this plugin's rack app.
+      #
+      # @param path [String]  the path relative to the mountpoint of the rack
+      #                       app
+      # @return the URL
+      def rack_app_full_url(path)
+        [
+          base_uri_object.to_s.sub(%r{/+$}, ''),
+          path.sub(%r{^/+}, '')
+        ].join('/')
+      end
+
+      # Delegates to +ClassMethods#mounted_rack_app+.
+      #
+      # @return the rack app with the helper methods
+      def mounted_rack_app
+        self.class.mounted_rack_app
       end
 
       protected
+
+      def base_uri_object
+        URI(mountpoint)
+      end
 
       def set_plugin_object_on_rack_app
         if mounted_rack_app

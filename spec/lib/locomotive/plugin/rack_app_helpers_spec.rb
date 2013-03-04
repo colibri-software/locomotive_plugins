@@ -10,7 +10,7 @@ module Locomotive
       let(:mounted_app) { plugin.class.mounted_rack_app }
 
       before(:each) do
-        plugin.class.mountpoint = 'http://www.example.com/my/path/'
+        plugin.mountpoint = 'http://www.example.com/my/path/'
         plugin.class.instance_variable_set(:@mounted_rack_app, nil)
       end
 
@@ -96,17 +96,8 @@ module Locomotive
         mounted_app.call(default_env)
       end
 
-      %w{rack_app_full_path rack_app_full_url mountpoint mounted_rack_app}.each do |meth|
-        it "should pass the #{meth} instance method through to the plugin class" do
-          args = {
-            'rack_app_full_path' => ['/'],
-            'rack_app_full_url' => ['/'],
-            'mountpoint' => [],
-            'mounted_rack_app' => []
-          }
-          plugin.public_send(meth, *args[meth]).should ==
-            plugin.class.public_send(meth, *args[meth])
-        end
+        it 'should supply a mounted_rack_app instance method' do
+          plugin.mounted_rack_app.should == plugin.class.mounted_rack_app
       end
 
       protected
