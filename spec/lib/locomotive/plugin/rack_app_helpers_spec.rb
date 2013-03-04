@@ -7,30 +7,35 @@ module Locomotive
 
       let(:plugin) { PluginWithRackApp.new }
 
-      let(:mounted_app) { plugin.mounted_rack_app }
-
-      let(:original_app) { plugin.class.rack_app }
+      let(:mounted_app) { plugin.class.mounted_rack_app }
 
       before(:each) do
-        plugin.mountpoint = 'http://www.example.com/my/path/'
+        plugin.class.mountpoint = 'http://www.example.com/my/path/'
+        plugin.class.instance_variable_set(:@mounted_rack_app, nil)
       end
 
       it 'should only supply a Rack app if one has been given' do
         plugin = UselessPlugin.new
-        plugin.mounted_rack_app.should be_nil
+        plugin.class.mounted_rack_app.should be_nil
+      end
+
+      it 'should supply a mounted app which is equal to the supplied app' do
+        mounted_app.should == plugin.class.rack_app
       end
 
       it 'should add the plugin object to the Rack app' do
         stub_app_call do
-          original_app.plugin_object.should == plugin
+          mounted_app.plugin_object.should == plugin
         end
 
+        mounted_app.plugin_object.should be_nil
         mounted_app.call(default_env)
+        mounted_app.plugin_object.should be_nil
       end
 
       it 'should add path and url helpers to the Rack app' do
-        original_app.respond_to?(:full_path).should be_true
-        original_app.respond_to?(:full_url).should be_true
+        mounted_app.respond_to?(:full_path).should be_true
+        mounted_app.respond_to?(:full_url).should be_true
       end
 
       it 'should not add the helper methods if they have already been added' do
@@ -44,15 +49,15 @@ module Locomotive
         plugin.class.stubs(:rack_app).returns(rack_app)
 
         rack_app.expects(:extend).with(HelperMethods)
-        app = plugin.mounted_rack_app
+        app = plugin.class.mounted_rack_app
 
         plugin = PluginWithRackApp.new
         rack_app = NewRackAppClass.new
         plugin.class.stubs(:rack_app).returns(rack_app)
 
-        app = plugin.mounted_rack_app
+        app = plugin.class.mounted_rack_app
         rack_app.expects(:extend).with(HelperMethods).never
-        app = plugin.mounted_rack_app
+        app = plugin.class.mounted_rack_app
       end
 
       it 'should supply an absolute path from the plugin object and the Rack app' do
@@ -66,8 +71,8 @@ module Locomotive
         plugin.rack_app_full_path(path1).should == full_path1
 
         stub_app_call do
-          original_app.full_path(path0).should == full_path0
-          original_app.full_path(path1).should == full_path1
+          mounted_app.full_path(path0).should == full_path0
+          mounted_app.full_path(path1).should == full_path1
         end
 
         mounted_app.call(default_env)
@@ -84,11 +89,24 @@ module Locomotive
         plugin.rack_app_full_url(path1).should == full_url1
 
         stub_app_call do
-          original_app.full_url(path0).should == full_url0
-          original_app.full_url(path1).should == full_url1
+          mounted_app.full_url(path0).should == full_url0
+          mounted_app.full_url(path1).should == full_url1
         end
 
         mounted_app.call(default_env)
+      end
+
+      %w{rack_app_full_path rack_app_full_url mountpoint mounted_rack_app}.each do |meth|
+        it "should pass the #{meth} instance method through to the plugin class" do
+          args = {
+            'rack_app_full_path' => ['/'],
+            'rack_app_full_url' => ['/'],
+            'mountpoint' => [],
+            'mounted_rack_app' => []
+          }
+          plugin.public_send(meth, *args[meth]).should ==
+            plugin.class.public_send(meth, *args[meth])
+        end
       end
 
       protected
@@ -105,9 +123,11 @@ module Locomotive
       # `mounted_app.call`, the spec will fail.
       def stub_app_call(&block)
         obj = Object.new
-        original_app.block = Proc.new do
+        mounted_app.block = Proc.new do
           obj.the_block_has_been_called
-          block.call
+          plugin.run_callbacks(:rack_app_request) do
+            block.call
+          end
         end
         obj.expects(:the_block_has_been_called).at_least_once
       end

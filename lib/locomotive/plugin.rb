@@ -26,10 +26,14 @@ module Locomotive
       self.add_load_initialization_class_methods(base)
       self.add_liquid_class_methods(base)
 
+      base.extend RackAppHelpers::ClassMethods
+
       base.class_eval do
         extend ActiveModel::Callbacks
         define_model_callbacks :page_render
         define_model_callbacks :rack_app_request
+
+        around_rack_app_request :set_plugin_object_on_rack_app
       end
 
       base.extend ClassMethods
