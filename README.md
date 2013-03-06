@@ -1,5 +1,5 @@
 
-# Locomotive Plugins [![Build Status](https://secure.travis-ci.org/colibri-software/locomotive_plugins.png)](https://secure.travis-ci.org/colibri-software/locomotive_plugins.png)
+# Locomotive Plugins [![Build Status](https://secure.travis-ci.org/colibri-software/locomotive_plugins.png)](https://travis-ci.org/colibri-software/locomotive_plugins)
 
 This gem is used to develop plugins for [Locomotive
 CMS](http://locomotivecms.com/). Plugins can be enabled or disabled on each
@@ -305,7 +305,7 @@ single site, since each site will have its own database.
 ### Rack App
 
 Plugins can supply a Rack Application to be used for request handling. Do so by
-overriding the `rack_app` instance method in the plugin class. The Rack app
+overriding the `rack_app` class method in the plugin class. The Rack app
 will be given some helper methods which can be called while it is handling a
 request:
 
@@ -329,3 +329,7 @@ to generate a link.
   `full_path(path)` above.
 * `rack_app_full_url(path)`: generate the full url for `path`. Same as
   `full_url(path)` above.
+
+If your `rack_app` method creates and returns a new object instance, call the
+`mounted_rack_app` method on the plugin object or the plugin class to get the
+instance which is mounted in the rails app.
