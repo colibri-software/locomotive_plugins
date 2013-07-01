@@ -19,7 +19,8 @@ Alternatively if you're using Bundler, add the following line to your Gemfile:
 and run `bundle install`.
 
 To install the plugin in LocomotiveCMS, simply [create a LocomotiveCMS
-app](http://doc.locomotivecms.com/installation/getting_started) and add your
+app](http://doc.locomotivecms.com/guides/get-started/install-engine), ensuring
+you have all of the [Requirements](http://doc.locomotivecms.com/guides/get-started/requirements) installed, and add your
 plugin gem to the app's Gemfile in the `locomotive_plugins` group:
 
     group(:locomotive_plugins) do
