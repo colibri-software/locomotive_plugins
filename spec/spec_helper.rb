@@ -13,9 +13,8 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 require 'locomotive_plugins'
 
 # Set up mongoid
-Mongoid.configure do |config|
-  config.master = Mongo::Connection.new.db('locomotive_plugins_test')
-end
+ENV["MONGOID_ENV"] = "test"
+Mongoid.load!('spec/support/mongoid.yml')
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

@@ -9,6 +9,7 @@ group :test do
   gem 'factory_girl'
   gem 'mocha'
   gem 'database_cleaner'
+  gem 'mongo'
 end
 
 group :development do

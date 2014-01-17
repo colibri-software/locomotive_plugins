@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml',              '~> 3.1'
 
   s.add_dependency 'bson_ext'
-  s.add_dependency 'mongoid',           '~> 2.4.12'
+  s.add_dependency 'mongoid',           '~> 3.1.5'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'

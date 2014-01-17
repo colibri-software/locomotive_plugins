@@ -1,0 +1,6 @@
+test:
+  sessions:
+    default:
+      database: locomotive_plugins_test
+      hosts:
+        - localhost:27017
