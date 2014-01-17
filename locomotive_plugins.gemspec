@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.homepage            = 'https://github.com/colibri-software/locomotive_plugins'
 
   s.add_dependency 'locomotive_liquid', '~> 2.4'
-  s.add_dependency 'haml',              '~> 3.1'
+  s.add_dependency 'haml',              '~> 4.0'
 
   s.add_dependency 'bson_ext'
   s.add_dependency 'mongoid',           '~> 3.1.5'

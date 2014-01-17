@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    locomotive_plugins (1.0.0.beta10)
+    locomotive_plugins (1.0.0)
       bson_ext
-      haml (~> 3.1)
+      haml (~> 4.0)
       locomotive_liquid (~> 2.4)
       mongoid (~> 3.1.5)
 
@@ -30,7 +30,8 @@ GEM
       builder
       httpclient
       sinatra
-    haml (3.1.8)
+    haml (4.0.5)
+      tilt
     httpclient (2.2.7)
     i18n (0.6.0)
     locomotive_liquid (2.4.2)
