@@ -272,10 +272,11 @@ checked, the config hash will be as follows:
 
 Plugins can persist data in Locomotive's database through the use of Database
 Models. A Database Model is simply a Mongoid document which is managed by
-Locomotive CMS. For example:
+Locomotive CMS. To allow your model to be managed by Locomotive CMS you must
+use Locomotive::Plugins::Document instead of Mongoid::Document. For example:
 
     class VisitCount
-      include Mongoid::Document
+      include Locomotive::Plugins::Document
       field :count, default: 0
     end
 
@@ -296,12 +297,51 @@ Locomotive CMS. For example:
       end
     end
 
-Note that the plugin databases are isolated between Locomotive site instances.
-In other words, if a plugin is enabled on two sites, A and B, and a request
-comes in to site A which causes a Mongoid Document to be saved to the database,
-this document will not be accessible to the plugin when a request comes in to
-site B. Thus plugin database models should be developed in the context of a
-single site, since each site will have its own database.
+Note that the plugin databases that use the Locomtive::Plugins::Document are
+isolated between Locomotive site instances. In other words, if a plugin is
+enabled on two sites, A and B, and a request comes in to site A which causes
+a Mongoid Document to be saved to the database, this document will not be
+accessible to the plugin when a request comes in to site B. Thus plugin
+database models should be developed in the context of a single site, since
+each site will have its own database. If you require a database model the is
+avaiable to all sites then you can do so by using a regualar Mongoid::Document.
+
+### JS3 (JavaScript on the Server Side)
+
+JS3 was developed to provide a secure way to allow inter-plugin communication.
+It allows a plugin developer to provide methods and variables to any other
+plugin contained in a sandbox. For instance if you have a plugin A that
+provides user accounts and a plugin B the restricts access to a configured path
+then you may want to be able to access the accounts on plugin A from plugin B.
+To do this you would have to do the following.
+
+Plugin A: allow plugins to access users.
+
+In the plugin definition add the following:
+
+    def self.javascript_context
+      {
+        users: Locomotive::Plugins::Variable.new { Users.all }
+      }
+    end
+
+Plugin B:
+
+You have a few options here. You can access the users from ruby by doing the
+following:
+
+    plugin_object.js3_context['plugin_a_users']
+
+This will return a mongoid criteria the you can do what you want with. If you
+want the restrictions to be variable by site the you could add a javascript
+block to the config and then run that javascript code on the js3 context.
+
+    plugin_object.js3_context.eval(config['javascript_block'])
+
+You can also add other methods or variable to the context that you want only
+your plugin to have access to, each time you call js3_context you will get a
+new object. To find out more take a look at the gem
+['therubyracer'](https://github.com/cowboyd/therubyracer).
 
 ### Rack App
 
