@@ -48,6 +48,13 @@ module Locomotive
       { 'my_tag' => MyTag }
     end
 
+    def self.javascript_context
+      {
+        variable: self.custom_attribute,
+        method: lambda{|this,word,times| word * times  }
+      }
+    end
+
     def my_method1
       'This is my before filter!'
     end

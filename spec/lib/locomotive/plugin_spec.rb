@@ -42,5 +42,13 @@ module Locomotive
       PluginWithRackApp.rack_app.should_not be_nil
     end
 
+    it 'should optionally supply a js3 context' do
+      MyPlugin.javascript_context.keys.should == [:variable, :method]
+      UselessPlugin.javascript_context.should == {}
+    end
+
+    it 'should be able to get a js3 context' do
+      @plugin.respond_to?(:js3_context).should be true
+    end
   end
 end

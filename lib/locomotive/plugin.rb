@@ -15,6 +15,7 @@ module Locomotive
     include LoadInitialization
     include Liquid
     include RackAppHelpers
+    include JS3
 
     # @private
     #
@@ -95,7 +96,29 @@ module Locomotive
         nil
       end
 
-    end
+      # Override this method to specify ruby objects accessable via the global
+      # javascript context. The return value must be a hash whoes keys are the
+      # variable names and the values are the objects. The objects will be
+      # included in the global context after being prefixed with the plugin_id.
+      #
+      # Note:
+      #   therubyracer is not able to execute class methods so please ensure
+      #   that the objects you pass in are not classes.
+      #
+      # @exaple
+      #   class MyPlugin
+      #     def self.javascript_context
+      #       {
+      #         :things => ::Locomotive::Plugins::Variable.new {Thing.all},
+      #         :say => lambda{|this,word,times| word * times}
+      #       }
+      #     end
+      #   end
+      def javascript_context
+        {}
+      end
+
+    end ## class
 
     # This variable is set by LocomotiveCMS. It contains the controller which
     # is handling the current request.
