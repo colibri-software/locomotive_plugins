@@ -33,6 +33,7 @@ module Locomotive
         extend ActiveModel::Callbacks
         define_model_callbacks :page_render
         define_model_callbacks :rack_app_request
+        define_model_callbacks :plugin_setup
 
         around_rack_app_request :set_plugin_object_on_rack_app
       end
