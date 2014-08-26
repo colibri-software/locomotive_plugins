@@ -343,6 +343,18 @@ your plugin to have access to, each time you call js3_context you will get a
 new object. To find out more take a look at the gem
 ['therubyracer'](https://github.com/cowboyd/therubyracer).
 
+Locomotive CMS also adds two helper methods to the context to help with doing
+simple database queries. The two methods are as follows:
+
+* mongoid_where(criteria, key, value) - criteria is a mongoid criteria, key
+  the the field name, and value is the query value. This method will run a
+  where query on the given field with the given value and return a mongoid
+  criteria.
+* mongoid_in(criteria, key, value) - criteria is a mongoid criteria, key
+  the the field name, and value is the query value. This method will run a
+  in query on the given field with the given value and return a mongoid
+  criteria.
+
 ### Rack App
 
 Plugins can supply a Rack Application to be used for request handling. Do so by
