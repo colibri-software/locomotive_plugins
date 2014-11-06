@@ -4,3 +4,7 @@ rvm:
 
 services:
   - mongodb
+
+notifications:
+  email:
+    - greeneca@gmail.com
