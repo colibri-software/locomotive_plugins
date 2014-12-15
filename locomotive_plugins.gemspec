@@ -28,6 +28,4 @@ Gem::Specification.new do |s|
     *%w{bin lib man test spec}.collect { |dir| "#{dir}/**/*" },
     *%w{README LICENSE CHANGELOG}.collect { |file| "#{file}*" }
   ]
-
-  s.required_ruby_version = '~> 1.9'
 end
